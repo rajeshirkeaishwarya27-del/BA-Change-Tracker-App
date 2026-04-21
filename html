@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BA Change Tracker — Aishwarya Rajeshirke</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0f1117;--surface:#181c27;--surface2:#1e2334;--surface3:#252b3d;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f2ff;--text2:#8891b4;--text3:#5a6182;
+  --accent:#4f7bff;--accent2:#7c5cfc;
+  --success:#22d3a4;--warning:#f5a623;--danger:#ff5c5c;--info:#38b2f5;
+  --font:'Sora',sans-serif;--mono:'JetBrains Mono',monospace;
+  --r:14px;--r-sm:8px;--sidebar:240px;--header:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
+
+/* TOPBAR */
+.topbar{height:var(--header);background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;flex-shrink:0;z-index:50;}
+.topbar-logo{width:36px;height:36px;background:linear-gradient(135deg,var(--accent),var(--accent2));border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.topbar-title{font-size:17px;font-weight:700;letter-spacing:-.4px;flex:1;}
+.topbar-title span{color:var(--accent);}
+.topbar-search{display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:0 14px;height:36px;width:280px;}
+.topbar-search input{background:transparent;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:13px;width:100%;}
+.topbar-search input::placeholder{color:var(--text3);}
+.topbar-search svg{width:15px;height:15px;stroke:var(--text3);fill:none;flex-shrink:0;}
+.topbar-actions{display:flex;align-items:center;gap:10px;}
+.topbar-btn{width:36px;height:36px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;position:relative;}
+.topbar-btn:hover{background:var(--surface3);}
+.topbar-btn svg{width:17px;height:17px;stroke:var(--text2);fill:none;}
+.pulse-dot{position:absolute;top:7px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--danger);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,92,92,.4);}50%{box-shadow:0 0 0 4px rgba(255,92,92,0);}}
+.topbar-user{display:flex;align-items:center;gap:10px;cursor:pointer;padding:6px 12px;border-radius:var(--r-sm);transition:background .15s;}
+.topbar-user:hover{background:var(--surface2);}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.user-info .user-name{font-size:13px;font-weight:600;}
+.user-info .user-role{font-size:11px;color:var(--text3);}
+
+/* LAYOUT */
+.app-body{display:flex;flex:1;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:var(--sidebar);background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;flex-shrink:0;padding:16px 12px;overflow-y:auto;}
+.nav-section-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:1px;padding:0 8px;margin:16px 0 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);cursor:pointer;transition:all .15s;margin-bottom:2px;}
+.nav-item:hover{background:var(--surface2);}
+.nav-item.active{background:rgba(79,123,255,.15);}
+.nav-item svg{width:17px;height:17px;stroke:var(--text2);fill:none;stroke-width:1.8;flex-shrink:0;transition:stroke .15s;}
+.nav-item.active svg{stroke:var(--accent);}
+.nav-label{font-size:13px;font-weight:500;color:var(--text2);transition:color .15s;}
+.nav-item.active .nav-label{color:var(--accent);}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;font-size:9px;font-weight:700;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 4px;}
+.sidebar-footer{margin-top:auto;padding-top:16px;border-top:1px solid var(--border);}
+.sidebar-add-btn{width:100%;padding:10px;border-radius:var(--r-sm);background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;border:none;font-family:var(--font);font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s;}
+.sidebar-add-btn:hover{opacity:.85;}
+
+/* CONTENT */
+.content{flex:1;overflow-y:auto;overflow-x:hidden;}
+.page{display:none;padding:28px 32px;min-height:100%;}
+.page.active{display:block;}
+::-webkit-scrollbar{width:6px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--surface3);border-radius:3px;}
+
+/* PAGE HEADER */
+.page-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;}
+.page-title{font-size:26px;font-weight:700;letter-spacing:-.6px;}
+.page-subtitle{font-size:13px;color:var(--text2);margin-top:4px;}
+.page-header-actions{display:flex;gap:10px;align-items:center;flex-shrink:0;}
+.btn{padding:9px 18px;border-radius:var(--r-sm);border:none;cursor:pointer;font-family:var(--font);font-size:13px;font-weight:600;transition:all .15s;display:inline-flex;align-items:center;gap:7px;}
+.btn:hover{opacity:.88;}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;box-shadow:0 4px 14px rgba(79,123,255,.3);}
+.btn-ghost{background:var(--surface2);color:var(--text2);border:1px solid var(--border);}
+.btn-danger{background:rgba(255,92,92,.15);color:var(--danger);border:1px solid rgba(255,92,92,.25);}
+.btn-success{background:rgba(34,211,164,.15);color:var(--success);border:1px solid rgba(34,211,164,.25);}
+.btn-sm{padding:5px 12px;font-size:11px;}
+
+/* STATS */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;cursor:pointer;transition:all .18s;}
+.stat-card:hover{border-color:var(--border2);transform:translateY(-2px);}
+.stat-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:10px;}
+.stat-value{font-size:36px;font-weight:700;letter-spacing:-1.5px;font-family:var(--mono);line-height:1;}
+.stat-sub{font-size:11px;color:var(--text2);margin-top:6px;}
+.stat-bar{height:3px;background:var(--surface3);border-radius:2px;margin-top:12px;overflow:hidden;}
+.stat-bar-fill{height:100%;border-radius:2px;transition:width 1s ease;}
+.accent-blue .stat-value{color:var(--accent);} .accent-blue .stat-bar-fill{background:var(--accent);}
+.accent-green .stat-value{color:var(--success);} .accent-green .stat-bar-fill{background:var(--success);}
+.accent-yellow .stat-value{color:var(--warning);} .accent-yellow .stat-bar-fill{background:var(--warning);}
+.accent-red .stat-value{color:var(--danger);} .accent-red .stat-bar-fill{background:var(--danger);}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;}
+.badge-open{background:rgba(56,178,245,.15);color:var(--info);}
+.badge-progress{background:rgba(245,166,35,.15);color:var(--warning);}
+.badge-review{background:rgba(124,92,252,.15);color:var(--accent2);}
+.badge-done{background:rgba(34,211,164,.15);color:var(--success);}
+.badge-rejected{background:rgba(255,92,92,.15);color:var(--danger);}
+.badge-critical{background:rgba(255,92,92,.15);color:var(--danger);}
+.badge-high{background:rgba(245,166,35,.15);color:var(--warning);}
+.badge-medium{background:rgba(56,178,245,.15);color:var(--info);}
+.badge-low{background:rgba(34,211,164,.15);color:var(--success);}
+
+/* TABLE */
+.table-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+table{width:100%;border-collapse:collapse;}
+thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;border-bottom:1px solid var(--border);background:var(--surface2);}
+tbody tr{border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s;}
+tbody tr:last-child{border-bottom:none;}
+tbody tr:hover{background:var(--surface2);}
+tbody td{padding:13px 16px;font-size:13px;vertical-align:middle;}
+.td-id{font-family:var(--mono);font-size:11px;color:var(--text3);}
+.td-title{font-weight:600;max-width:220px;}
+.td-desc{font-size:11px;color:var(--text2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px;}
+
+/* FILTER */
+.filter-bar{display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
+.chip{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--surface);font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.chip:hover{border-color:var(--border2);}
+.chip.active{background:rgba(79,123,255,.15);border-color:var(--accent);color:var(--accent);}
+
+/* AVATAR */
+.avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;}
+
+/* SECTION */
+.section-title{font-size:12px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:1px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.section-action{font-size:12px;color:var(--accent);text-transform:none;letter-spacing:0;font-weight:600;cursor:pointer;}
+
+/* PANEL */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px;}
+.panel-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);z-index:200;opacity:0;pointer-events:none;transition:opacity .2s;display:flex;align-items:center;justify-content:center;}
+.modal-overlay.visible{opacity:1;pointer-events:all;}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);width:580px;max-width:96vw;max-height:90vh;overflow-y:auto;transform:scale(.95);transition:transform .22s cubic-bezier(.34,1.1,.64,1);}
+.modal-overlay.visible .modal{transform:scale(1);}
+.modal-lg{width:760px;}
+.modal-header{padding:22px 24px 0;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;}
+.modal-title{font-size:18px;font-weight:700;letter-spacing:-.4px;}
+.modal-close{width:30px;height:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s;}
+.modal-close:hover{background:var(--surface3);}
+.modal-close svg{width:14px;height:14px;stroke:var(--text2);fill:none;}
+.modal-body{padding:0 24px 24px;}
+.modal-footer{display:flex;gap:10px;justify-content:flex-end;padding:16px 24px;border-top:1px solid var(--border);}
+
+/* FORM */
+.form-group{margin-bottom:16px;}
+.form-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;display:block;margin-bottom:7px;}
+.form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 13px;outline:none;transition:border-color .15s;}
+.form-input:focus{border-color:var(--accent);}
+.form-input::placeholder{color:var(--text3);}
+textarea.form-input{resize:none;height:80px;}
+select.form-input{appearance:none;cursor:pointer;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+/* ANALYTICS CHARTS */
+.analytics-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.analytics-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:22px;}
+.analytics-card.full{grid-column:span 2;}
+.analytics-title{font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:18px;}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:11px;}
+.bar-lbl{font-size:12px;color:var(--text2);width:100px;flex-shrink:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-track{flex:1;height:9px;background:var(--surface3);border-radius:5px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:5px;transition:width .9s cubic-bezier(.34,1.1,.64,1);}
+.bar-num{font-size:12px;color:var(--text2);font-family:var(--mono);width:28px;text-align:right;flex-shrink:0;}
+
+/* PIE CHART (SVG-based) */
+.pie-wrap{display:flex;align-items:center;gap:24px;}
+.pie-legend{flex:1;display:flex;flex-direction:column;gap:9px;}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text2);}
+.legend-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.legend-pct{margin-left:auto;font-family:var(--mono);font-size:12px;}
+
+/* DONUT */
+.donut-wrap{display:flex;align-items:center;gap:20px;}
+.progress-ring{position:relative;width:110px;height:110px;flex-shrink:0;}
+.progress-ring svg{transform:rotate(-90deg);}
+.ring-label{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.ring-num{font-size:24px;font-weight:700;font-family:var(--mono);line-height:1;}
+.ring-sub{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+
+/* TIMELINE */
+.tl-wrap{position:relative;padding-left:22px;}
+.tl-wrap::before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:1px;background:var(--border);}
+.tl-item{position:relative;margin-bottom:14px;}
+.tl-dot{position:absolute;left:-22px;top:4px;width:13px;height:13px;border-radius:50%;background:var(--surface3);border:2px solid var(--border2);}
+.tl-dot.active{background:var(--accent);border-color:var(--accent);}
+.tl-text{font-size:13px;color:var(--text2);}
+.tl-time{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;}
+
+/* DETAIL */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:16px;}
+.detail-label{font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:5px;}
+.detail-value{font-size:14px;color:var(--text);line-height:1.5;}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+
+/* WORKFLOW PAGE */
+.workflow-wrap{display:flex;flex-direction:column;gap:28px;}
+.wf-stages{display:flex;align-items:stretch;gap:0;margin-bottom:32px;}
+.wf-stage{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:0;padding:22px 18px;position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;}
+.wf-stage:first-child{border-radius:var(--r) 0 0 var(--r);}
+.wf-stage:last-child{border-radius:0 var(--r) var(--r) 0;}
+.wf-stage+.wf-stage{border-left:none;}
+.wf-stage::after{content:'';position:absolute;right:-14px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:14px solid var(--border2);border-top:20px solid transparent;border-bottom:20px solid transparent;z-index:2;}
+.wf-stage:last-child::after{display:none;}
+.wf-stage::before{content:'';position:absolute;right:-13px;top:50%;transform:translateY(-50%);width:0;height:0;border-left:14px solid var(--surface);border-top:20px solid transparent;border-bottom:20px solid transparent;z-index:3;}
+.wf-stage:last-child::before{display:none;}
+.wf-icon{font-size:28px;margin-bottom:10px;}
+.wf-name{font-size:13px;font-weight:700;letter-spacing:-.2px;margin-bottom:6px;}
+.wf-desc{font-size:11px;color:var(--text2);line-height:1.5;}
+.wf-badge{display:inline-flex;padding:3px 9px;border-radius:10px;font-size:10px;font-weight:700;margin-bottom:8px;}
+.wf-stage-1 .wf-badge{background:rgba(56,178,245,.2);color:var(--info);}
+.wf-stage-2 .wf-badge{background:rgba(245,166,35,.2);color:var(--warning);}
+.wf-stage-3 .wf-badge{background:rgba(124,92,252,.2);color:var(--accent2);}
+.wf-stage-4 .wf-badge{background:rgba(79,123,255,.2);color:var(--accent);}
+.wf-stage-5 .wf-badge{background:rgba(34,211,164,.2);color:var(--success);}
+.wf-details{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.wf-detail-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:18px;}
+.wf-detail-title{font-size:13px;font-weight:700;margin-bottom:10px;}
+.wf-detail-list{display:flex;flex-direction:column;gap:7px;}
+.wf-detail-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text2);line-height:1.4;}
+.wf-detail-item::before{content:'→';color:var(--accent);font-size:11px;flex-shrink:0;margin-top:1px;}
+.wf-sla{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;}
+.sla-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;text-align:center;}
+.sla-val{font-size:22px;font-weight:700;font-family:var(--mono);color:var(--accent);}
+.sla-lbl{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-top:3px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:28px;right:28px;background:var(--surface3);border:1px solid var(--border2);border-radius:12px;padding:12px 20px;font-size:13px;font-weight:500;z-index:500;opacity:0;transform:translateY(12px);transition:all .25s cubic-bezier(.34,1.1,.64,1);display:flex;align-items:center;gap:8px;}
+.toast.show{opacity:1;transform:translateY(0);}
+
+/* DASH GRID */
+.dash-grid{display:grid;grid-template-columns:1fr 340px;gap:20px;}
+.dash-main{display:flex;flex-direction:column;gap:20px;}
+.dash-side{display:flex;flex-direction:column;gap:16px;}
+
+/* SETTINGS */
+.settings-item{display:flex;align-items:center;gap:14px;padding:15px 20px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .15s;}
+.settings-item:last-child{border-bottom:none;}
+.settings-item:hover{background:var(--surface2);}
+.settings-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.settings-icon svg{width:17px;height:17px;fill:none;stroke-width:1.8;}
+.settings-label{font-size:14px;font-weight:500;flex:1;}
+.settings-desc{font-size:12px;color:var(--text3);}
+.settings-chevron svg{width:15px;height:15px;stroke:var(--text3);fill:none;}
+.toggle{width:42px;height:24px;border-radius:12px;position:relative;cursor:pointer;transition:background .2s;flex-shrink:0;}
+.toggle.on{background:var(--accent);}
+.toggle.off{background:var(--surface3);}
+.toggle-thumb{position:absolute;top:3px;width:18px;height:18px;background:#fff;border-radius:50%;transition:left .2s;}
+.toggle.on .toggle-thumb{left:21px;}
+.toggle.off .toggle-thumb{left:3px;}
+
+/* PROFILE */
+.profile-layout{display:grid;grid-template-columns:300px 1fr;gap:24px;}
+.profile-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:28px;text-align:center;}
+.profile-avatar-lg{width:90px;height:90px;border-radius:24px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:30px;font-weight:700;margin:0 auto 16px;box-shadow:0 8px 28px rgba(79,123,255,.3);}
+.profile-stats{display:flex;gap:0;margin-top:20px;border-top:1px solid var(--border);padding-top:20px;}
+.profile-stat{flex:1;text-align:center;}
+.profile-stat+.profile-stat{border-left:1px solid var(--border);}
+.profile-stat-val{font-size:22px;font-weight:700;font-family:var(--mono);}
+.profile-stat-lbl{font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-top:2px;}
+.settings-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-logo">📋</div>
+  <div class="topbar-title">BA <span>Change</span> Tracker</div>
+  <div class="topbar-search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8" stroke-width="2"/><path d="M21 21l-4.35-4.35" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Search ID, title, owner…" id="globalSearch" oninput="globalSearchFn()">
+  </div>
+  <div class="topbar-actions">
+    <div class="topbar-btn" onclick="switchPage('notifications')" title="Notifications">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2"/></svg>
+      <div class="pulse-dot"></div>
+    </div>
+    <div class="topbar-btn" onclick="exportData()" title="Export CSV">
+      <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" stroke-width="2"/><polyline points="7 10 12 15 17 10" stroke-width="2"/><line x1="12" y1="15" x2="12" y2="3" stroke-width="2"/></svg>
+    </div>
+    <div class="topbar-user" onclick="switchPage('profile')">
+      <div class="user-avatar">AR</div>
+      <div class="user-info">
+        <div class="user-name">Aishwarya Rajeshirke</div>
+        <div class="user-role">Business Analyst</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="app-body">
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="nav-section-title">Main</div>
+    <div class="nav-item active" onclick="switchPage('dashboard')" id="nav-dashboard">
+      <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1" stroke-width="2"/></svg>
+      <span class="nav-label">Dashboard</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('changes')" id="nav-changes">
+      <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Change Requests</span>
+      <span class="nav-badge" id="sideChangeBadge" style="display:none">0</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('analytics')" id="nav-analytics">
+      <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10" stroke-width="2" stroke-linecap="round"/><line x1="12" y1="20" x2="12" y2="4" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="20" x2="6" y2="14" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">Analytics</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('workflow')" id="nav-workflow">
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span class="nav-label">Workflow</span>
+    </div>
+    <div class="nav-section-title">Manage</div>
+    <div class="nav-item" onclick="switchPage('notifications')" id="nav-notifications">
+      <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2"/></svg>
+      <span class="nav-label">Notifications</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('teams')" id="nav-teams">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke-width="2"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2"/></svg>
+      <span class="nav-label">Teams</span>
+    </div>
+    <div class="nav-item" onclick="switchPage('reports')" id="nav-reports">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke-width="2"/><line x1="16" y1="13" x2="8" y2="13" stroke-width="2"/><line x1="16" y1="17" x2="8" y2="17" stroke-width="2"/></svg>
+      <span class="nav-label">Reports</span>
+    </div>
+    <div class="nav-section-title">Account</div>
+    <div class="nav-item" onclick="switchPage('profile')" id="nav-profile">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round"/></svg>
+      <span class="nav-label">My Profile</span>
+    </div>
+    <div class="sidebar-footer">
+      <button class="sidebar-add-btn" onclick="openAddModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        New Change Request
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good morning, Aishwarya 👋</div>
+          <div class="page-subtitle">IT Division Change Tracker — <span id="dashDate"></span></div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-ghost" onclick="exportData()">📤 Export CSV</button>
+          <button class="btn btn-primary" onclick="openAddModal()">+ New Change</button>
+        </div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card accent-blue" onclick="switchPage('changes')">
+          <div class="stat-label">Total Changes</div>
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-sub">All time</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:100%"></div></div>
+        </div>
+        <div class="stat-card accent-yellow">
+          <div class="stat-label">Active (Open + In Progress)</div>
+          <div class="stat-value" id="statActive">0</div>
+          <div class="stat-sub">Requiring action</div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="barActive" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card accent-green">
+          <div class="stat-label">Completed</div>
+          <div class="stat-value" id="statDone">0</div>
+          <div class="stat-sub">Successfully closed</div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="barDone" style="width:0%"></div></div>
+        </div>
+        <div class="stat-card accent-red">
+          <div class="stat-label">Critical Priority</div>
+          <div class="stat-value" id="statCritical">0</div>
+          <div class="stat-sub">Escalation needed</div>
+          <div class="stat-bar"><div class="stat-bar-fill" id="barCritical" style="width:0%"></div></div>
+        </div>
+      </div>
+      <div class="dash-grid">
+        <div class="dash-main">
+          <div>
+            <div class="section-title">Recent Change Requests <span class="section-action" onclick="switchPage('changes')">View all 100 →</span></div>
+            <div class="table-wrap">
+              <table>
+                <thead><tr><th>ID</th><th>Title</th><th>Priority</th><th>Status</th><th>Owner</th><th>Updated</th></tr></thead>
+                <tbody id="dashTable"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="dash-side">
+          <div class="panel">
+            <div class="panel-title">Status Distribution</div>
+            <div id="dashPie"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Top Owners by Load</div>
+            <div id="dashOwnerBars"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CHANGES ══ -->
+    <div class="page" id="page-changes">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Change Requests</div>
+          <div class="page-subtitle" id="changesSubtitle">100 total change requests</div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-ghost" onclick="exportData()">📤 Export</button>
+          <button class="btn btn-primary" onclick="openAddModal()">+ New Change</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <div class="chip active" onclick="setFilter('all',this)">All</div>
+        <div class="chip" onclick="setFilter('open',this)">Open</div>
+        <div class="chip" onclick="setFilter('progress',this)">In Progress</div>
+        <div class="chip" onclick="setFilter('review',this)">In Review</div>
+        <div class="chip" onclick="setFilter('done',this)">Done</div>
+        <div class="chip" onclick="setFilter('rejected',this)">Rejected</div>
+        <div class="chip" onclick="setFilter('critical',this)">🚨 Critical</div>
+        <div class="chip" onclick="setFilter('high',this)">🔴 High</div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>ID</th><th>Title / Description</th><th>Type</th><th>Priority</th><th>Status</th><th>Owner</th><th>Impact</th><th>Updated</th><th></th></tr></thead>
+          <tbody id="changesTable"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══ ANALYTICS ══ -->
+    <div class="page" id="page-analytics">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Analytics</div>
+          <div class="page-subtitle">Visual insights across all 100 change requests</div>
+        </div>
+      </div>
+      <!-- Completion Ring + Status Pie row -->
+      <div class="analytics-grid" style="margin-bottom:16px">
+        <div class="analytics-card">
+          <div class="analytics-title">Completion Rate</div>
+          <div class="donut-wrap">
+            <div class="progress-ring">
+              <svg width="110" height="110">
+                <circle cx="55" cy="55" r="44" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="11"/>
+                <circle cx="55" cy="55" r="44" fill="none" stroke="var(--success)" stroke-width="11" stroke-dasharray="276" id="completionRing" stroke-dashoffset="276" stroke-linecap="round"/>
+              </svg>
+              <div class="ring-label"><span class="ring-num" id="completionPct">0%</span><span class="ring-sub">Done</span></div>
+            </div>
+            <div style="flex:1" id="completionLegend"></div>
+          </div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-title">Status Distribution (Pie Chart)</div>
+          <div class="pie-wrap" id="statusPieWrap"></div>
+        </div>
+      </div>
+      <div class="analytics-grid" style="margin-bottom:16px">
+        <div class="analytics-card">
+          <div class="analytics-title">Changes by Priority</div>
+          <div id="priorityBars"></div>
+        </div>
+        <div class="analytics-card">
+          <div class="analytics-title">Changes by Type</div>
+          <div id="typeBars"></div>
+        </div>
+      </div>
+      <div class="analytics-card full" style="margin-bottom:16px">
+        <div class="analytics-title">Changes by Owner (Bar Chart)</div>
+        <div id="ownerBars"></div>
+      </div>
+      <div class="analytics-card full">
+        <div class="analytics-title">Monthly Change Trend (Jan 2025 – Jun 2025)</div>
+        <div id="trendBars"></div>
+      </div>
+    </div>
+
+    <!-- ══ WORKFLOW ══ -->
+    <div class="page" id="page-workflow">
+      <div class="page-header">
+        <div>
+          <div class="page-title">BA Change Workflow</div>
+          <div class="page-subtitle">End-to-end change request lifecycle — Request → Approval → Development → Testing → Closure</div>
+        </div>
+        <div class="page-header-actions">
+          <button class="btn btn-ghost" onclick="exportData()">📤 Export Report</button>
+        </div>
+      </div>
+
+      <!-- STAGE PIPELINE -->
+      <div class="wf-stages">
+        <div class="wf-stage wf-stage-1">
+          <div class="wf-badge">Stage 1</div>
+          <div class="wf-icon">📝</div>
+          <div class="wf-name">Request</div>
+          <div class="wf-desc">Business need identified and change request formally raised by stakeholder or BA</div>
+        </div>
+        <div class="wf-stage wf-stage-2">
+          <div class="wf-badge">Stage 2</div>
+          <div class="wf-icon">✅</div>
+          <div class="wf-name">Approval</div>
+          <div class="wf-desc">Change Review Board (CRB) evaluates impact, risk and feasibility before authorising</div>
+        </div>
+        <div class="wf-stage wf-stage-3">
+          <div class="wf-badge">Stage 3</div>
+          <div class="wf-icon">⚙️</div>
+          <div class="wf-name">Development</div>
+          <div class="wf-desc">Approved change built and implemented by development team per agreed specifications</div>
+        </div>
+        <div class="wf-stage wf-stage-4">
+          <div class="wf-badge">Stage 4</div>
+          <div class="wf-icon">🧪</div>
+          <div class="wf-name">Testing</div>
+          <div class="wf-desc">QA team validates the change in UAT environment; BA verifies against acceptance criteria</div>
+        </div>
+        <div class="wf-stage wf-stage-5">
+          <div class="wf-badge">Stage 5</div>
+          <div class="wf-icon">🏁</div>
+          <div class="wf-name">Closure</div>
+          <div class="wf-desc">Change deployed to production, stakeholders sign off, documentation updated and CR closed</div>
+        </div>
+      </div>
+
+      <!-- STAGE DETAIL CARDS -->
+      <div class="section-title" style="margin-bottom:14px">Stage Details & Responsibilities</div>
+      <div class="wf-details" style="margin-bottom:28px">
+        <div class="wf-detail-card" style="border-top:3px solid var(--info)">
+          <div class="wf-detail-title" style="color:var(--info)">📝 Request</div>
+          <div class="wf-detail-list">
+            <div class="wf-detail-item">Stakeholder raises business need</div>
+            <div class="wf-detail-item">BA captures requirements</div>
+            <div class="wf-detail-item">CR form completed with impact, scope, priority</div>
+            <div class="wf-detail-item">Initial effort estimate attached</div>
+            <div class="wf-detail-item">CR assigned unique ID and logged</div>
+          </div>
+        </div>
+        <div class="wf-detail-card" style="border-top:3px solid var(--warning)">
+          <div class="wf-detail-title" style="color:var(--warning)">✅ Approval</div>
+          <div class="wf-detail-list">
+            <div class="wf-detail-item">CRB reviews risk and feasibility</div>
+            <div class="wf-detail-item">IT Manager signs off for Technical CRs</div>
+            <div class="wf-detail-item">Budget approval for high-cost items</div>
+            <div class="wf-detail-item">Compliance review for Regulatory CRs</div>
+            <div class="wf-detail-item">Status updated to Approved or Rejected</div>
+          </div>
+        </div>
+        <div class="wf-detail-card" style="border-top:3px solid var(--accent2)">
+          <div class="wf-detail-title" style="color:var(--accent2)">⚙️ Development</div>
+          <div class="wf-detail-list">
+            <div class="wf-detail-item">Dev team receives approved spec</div>
+            <div class="wf-detail-item">Sprint planning and task breakdown</div>
+            <div class="wf-detail-item">Code review and peer validation</div>
+            <div class="wf-detail-item">BA reviews mid-sprint if scope changes</div>
+            <div class="wf-detail-item">CR status: In Progress</div>
+          </div>
+        </div>
+        <div class="wf-detail-card" style="border-top:3px solid var(--accent)">
+          <div class="wf-detail-title" style="color:var(--accent)">🧪 Testing</div>
+          <div class="wf-detail-list">
+            <div class="wf-detail-item">QA executes test cases in UAT</div>
+            <div class="wf-detail-item">BA runs acceptance testing</div>
+            <div class="wf-detail-item">Defects raised, tracked and resolved</div>
+            <div class="wf-detail-item">Regression testing for critical CRs</div>
+            <div class="wf-detail-item">Sign-off by stakeholder required</div>
+          </div>
+        </div>
+        <div class="wf-detail-card" style="border-top:3px solid var(--success)">
+          <div class="wf-detail-title" style="color:var(--success)">🏁 Closure</div>
+          <div class="wf-detail-list">
+            <div class="wf-detail-item">Production deployment scheduled</div>
+            <div class="wf-detail-item">Rollback plan confirmed</div>
+            <div class="wf-detail-item">Go-live notification sent to stakeholders</div>
+            <div class="wf-detail-item">Post-implementation review conducted</div>
+            <div class="wf-detail-item">CR status set to Done and archived</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLA TARGETS -->
+      <div class="section-title" style="margin-bottom:14px">SLA Targets per Stage</div>
+      <div class="wf-sla" style="margin-bottom:28px">
+        <div class="sla-card"><div class="sla-val">2d</div><div class="sla-lbl">Request submission</div></div>
+        <div class="sla-card"><div class="sla-val">5d</div><div class="sla-lbl">Approval decision</div></div>
+        <div class="sla-card"><div class="sla-val">14d</div><div class="sla-lbl">Development sprint</div></div>
+        <div class="sla-card"><div class="sla-val">5d</div><div class="sla-lbl">UAT testing</div></div>
+        <div class="sla-card"><div class="sla-val">2d</div><div class="sla-lbl">Closure & sign-off</div></div>
+      </div>
+
+      <!-- LIVE STATUS against workflow -->
+      <div class="section-title" style="margin-bottom:14px">Live CR Distribution across Workflow</div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:28px" id="wfLiveCards"></div>
+
+      <!-- ESCALATION RULES -->
+      <div class="section-title" style="margin-bottom:14px">Escalation & Exception Rules</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="panel">
+          <div class="panel-title">Escalation Triggers</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--danger);font-size:15px;flex-shrink:0">⚡</span>Critical CRs not approved within 24 hours → auto-escalate to IT Director</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--warning);font-size:15px;flex-shrink:0">⚡</span>Any CR in Development &gt;21 days → flag to Project Manager</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--warning);font-size:15px;flex-shrink:0">⚡</span>UAT defects unresolved after 3 days → escalate to Dev Lead</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--info);font-size:15px;flex-shrink:0">⚡</span>No stakeholder sign-off after 5 days → re-schedule closure review</div>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-title">Exception Handling</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--accent);font-size:15px;flex-shrink:0">🔄</span>Emergency change (P0): bypass CRB, get verbal approval, document post-facto</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--accent);font-size:15px;flex-shrink:0">🔄</span>Scope creep detected: raise new CR, do not expand existing one</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--accent);font-size:15px;flex-shrink:0">🔄</span>Rejected CRs may be resubmitted after addressing CRB feedback</div>
+            <div style="display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--text2)"><span style="color:var(--accent);font-size:15px;flex-shrink:0">🔄</span>Regulatory CRs require compliance officer signature before closure</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ NOTIFICATIONS ══ -->
+    <div class="page" id="page-notifications">
+      <div class="page-header">
+        <div><div class="page-title">Notifications</div><div class="page-subtitle">Stay updated on change request activity</div></div>
+        <div class="page-header-actions"><button class="btn btn-ghost" onclick="markAllRead()">✓ Mark all read</button></div>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 280px;gap:20px">
+        <div class="panel"><div id="notifList"></div></div>
+        <div class="panel">
+          <div class="panel-title">Notification Settings</div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600">Email Alerts</div><div style="font-size:11px;color:var(--text3)">Critical changes only</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600">Browser Push</div><div style="font-size:11px;color:var(--text3)">All status changes</div></div><div class="toggle on" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600">Weekly Digest</div><div style="font-size:11px;color:var(--text3)">Every Monday 9AM</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div></div>
+            <div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600">Slack Integration</div><div style="font-size:11px;color:var(--text3)">Post to #changes</div></div><div class="toggle off" onclick="toggleSetting(this)"><div class="toggle-thumb"></div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ TEAMS ══ -->
+    <div class="page" id="page-teams">
+      <div class="page-header">
+        <div><div class="page-title">Team Management</div><div class="page-subtitle">Manage members and workload distribution</div></div>
+        <div class="page-header-actions"><button class="btn btn-primary" onclick="openInviteModal()">+ Invite Member</button></div>
+      </div>
+      <div id="teamsList"></div>
+    </div>
+
+    <!-- ══ REPORTS ══ -->
+    <div class="page" id="page-reports">
+      <div class="page-header">
+        <div><div class="page-title">Reports</div><div class="page-subtitle">Generate and download detailed change management reports</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div class="panel" style="cursor:pointer" onclick="generateReport('Executive Summary')"><div style="font-size:28px;margin-bottom:12px">📊</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Executive Summary</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">High-level KPIs, completion rates and status overview for leadership</div><button class="btn btn-primary" style="width:100%">Generate PDF</button></div>
+        <div class="panel" style="cursor:pointer" onclick="generateReport('Detailed Change Log')"><div style="font-size:28px;margin-bottom:12px">📋</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Detailed Change Log</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">Full list of all 100 CRs with descriptions, owners and audit trail</div><button class="btn btn-primary" style="width:100%">Generate PDF</button></div>
+        <div class="panel" style="cursor:pointer" onclick="generateReport('Owner Performance')"><div style="font-size:28px;margin-bottom:12px">👥</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Owner Performance</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">Breakdown of changes per owner with individual completion rates</div><button class="btn btn-primary" style="width:100%">Generate PDF</button></div>
+        <div class="panel" style="cursor:pointer" onclick="exportData()"><div style="font-size:28px;margin-bottom:12px">📤</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Export to CSV</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">Download all 100 CRs in CSV format for Excel / Power BI</div><button class="btn btn-success" style="width:100%">Download CSV</button></div>
+        <div class="panel" style="cursor:pointer" onclick="generateReport('Risk Assessment')"><div style="font-size:28px;margin-bottom:12px">🚨</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Risk Assessment</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">Critical and high-priority open CRs with impact analysis</div><button class="btn btn-danger" style="width:100%">Generate PDF</button></div>
+        <div class="panel" style="cursor:pointer" onclick="generateReport('Monthly Summary')"><div style="font-size:28px;margin-bottom:12px">📅</div><div style="font-size:15px;font-weight:700;margin-bottom:6px">Monthly Summary</div><div style="font-size:12px;color:var(--text2);margin-bottom:16px">Changes this month grouped by type, status and priority</div><button class="btn btn-ghost" style="width:100%">Generate PDF</button></div>
+      </div>
+    </div>
+
+    <!-- ══ PROFILE ══ -->
+    <div class="page" id="page-profile">
+      <div class="page-header">
+        <div><div class="page-title">My Profile</div><div class="page-subtitle">Account settings and preferences</div></div>
+        <div class="page-header-actions"><button class="btn btn-primary" onclick="openEditProfileModal()">✏️ Edit Profile</button></div>
+      </div>
+      <div class="profile-layout">
+        <div>
+          <div class="profile-card" style="margin-bottom:16px">
+            <div class="profile-avatar-lg">AR</div>
+            <div style="font-size:20px;font-weight:700;letter-spacing:-.5px">Aishwarya Rajeshirke</div>
+            <div style="font-size:13px;color:var(--text2);margin-top:5px">Business Analyst · IT Division</div>
+            <div style="font-size:12px;color:var(--text3);margin-top:6px">aishwarya.rajeshirke@company.com</div>
+            <div class="profile-stats">
+              <div class="profile-stat"><div class="profile-stat-val" id="profTotal">0</div><div class="profile-stat-lbl">Changes</div></div>
+              <div class="profile-stat"><div class="profile-stat-val" id="profDone">0</div><div class="profile-stat-lbl">Done</div></div>
+              <div class="profile-stat"><div class="profile-stat-val">98%</div><div class="profile-stat-lbl">On Time</div></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-title">Account Details</div>
+            <table style="width:100%;font-size:13px">
+              <tr><td style="color:var(--text3);padding:6px 0">Employee ID</td><td style="text-align:right;font-family:var(--mono)">EMP-20241</td></tr>
+              <tr><td style="color:var(--text3);padding:6px 0">Department</td><td style="text-align:right">IT Division</td></tr>
+              <tr><td style="color:var(--text3);padding:6px 0">Location</td><td style="text-align:right">Pune, Maharashtra</td></tr>
+              <tr><td style="color:var(--text3);padding:6px 0">Joined</td><td style="text-align:right;font-family:var(--mono)">2022-08-01</td></tr>
+              <tr><td style="color:var(--text3);padding:6px 0">Last Login</td><td style="text-align:right;font-family:var(--mono)" id="lastLogin">—</td></tr>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="section-title" style="margin-bottom:10px">Settings</div>
+          <div class="settings-panel">
+            <div class="settings-item" onclick="openEditProfileModal()">
+              <div class="settings-icon" style="background:rgba(79,123,255,.15)"><svg viewBox="0 0 24 24" stroke="var(--accent)"><circle cx="12" cy="8" r="4" stroke-width="2"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div><div class="settings-label">Edit Profile</div><div class="settings-desc">Update name, email, role, photo</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="settings-item" onclick="switchPage('notifications')">
+              <div class="settings-icon" style="background:rgba(34,211,164,.15)"><svg viewBox="0 0 24 24" stroke="var(--success)"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/><path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2"/></svg></div>
+              <div><div class="settings-label">Notifications</div><div class="settings-desc">Manage alerts and preferences</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="settings-item" onclick="switchPage('teams')">
+              <div class="settings-icon" style="background:rgba(245,166,35,.15)"><svg viewBox="0 0 24 24" stroke="var(--warning)"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2"/><circle cx="9" cy="7" r="4" stroke-width="2"/></svg></div>
+              <div><div class="settings-label">Manage Teams</div><div class="settings-desc">Add, remove and assign members</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="settings-item" onclick="switchPage('reports')">
+              <div class="settings-icon" style="background:rgba(124,92,252,.15)"><svg viewBox="0 0 24 24" stroke="var(--accent2)"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-width="2"/><polyline points="14 2 14 8 20 8" stroke-width="2"/></svg></div>
+              <div><div class="settings-label">Export Reports</div><div class="settings-desc">Download CSV, PDF reports</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="settings-item" onclick="openChangePwdModal()">
+              <div class="settings-icon" style="background:rgba(56,178,245,.15)"><svg viewBox="0 0 24 24" stroke="var(--info)"><rect x="3" y="11" width="18" height="11" rx="2" stroke-width="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4" stroke-width="2"/></svg></div>
+              <div><div class="settings-label">Change Password</div><div class="settings-desc">Update login credentials</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+            <div class="settings-item" onclick="confirmSignOut()">
+              <div class="settings-icon" style="background:rgba(255,92,92,.15)"><svg viewBox="0 0 24 24" stroke="var(--danger)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-width="2" stroke-linecap="round"/></svg></div>
+              <div><div class="settings-label" style="color:var(--danger)">Sign Out</div><div class="settings-desc">End your current session</div></div>
+              <div class="settings-chevron"><svg viewBox="0 0 24 24" stroke="var(--text3)" stroke-width="2"><path d="M9 18l6-6-6-6" stroke-linecap="round"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /app-body -->
+
+<!-- ══ ADD/EDIT MODAL ══ -->
+<div class="modal-overlay" id="addOverlay" onclick="closeAddModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><div class="modal-title" id="addModalTitle">New Change Request</div><div class="modal-close" onclick="closeAddModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Change Title *</label><input class="form-input" id="fTitle" placeholder="e.g. Migrate legacy CRM to Salesforce"></div>
+      <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" id="fDesc" placeholder="Describe the business need, scope and expected outcome…"></textarea></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Priority</label><select class="form-input" id="fPriority"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option><option value="critical">Critical</option></select></div>
+        <div class="form-group"><label class="form-label">Status</label><select class="form-input" id="fStatus"><option value="open">Open</option><option value="progress">In Progress</option><option value="review">In Review</option><option value="done">Done</option><option value="rejected">Rejected</option></select></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Type</label><select class="form-input" id="fType"><option>Business</option><option>Technical</option><option>Process</option><option>Regulatory</option><option>UI/UX</option><option>Data</option><option>Infrastructure</option><option>Security</option></select></div>
+        <div class="form-group"><label class="form-label">Owner</label><input class="form-input" id="fOwner" placeholder="Assignee full name"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Impact Area</label><input class="form-input" id="fImpact" placeholder="e.g. Customer Portal, Backend API, Finance Module"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="closeAddModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveChange()">Save Change Request</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DETAIL MODAL ══ -->
+<div class="modal-overlay" id="detailOverlay" onclick="closeDetailModal(event)">
+  <div class="modal modal-lg" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <div><div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-bottom:4px" id="detailId">—</div><div class="modal-title" id="detailTitle">—</div></div>
+      <div class="modal-close" onclick="closeDetailModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/></svg></div>
+    </div>
+    <div class="modal-body" id="detailBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" id="detailDeleteBtn">🗑️ Delete</button>
+      <div style="flex:1"></div>
+      <button class="btn btn-ghost" onclick="closeDetailModal()">Close</button>
+      <button class="btn btn-primary" id="detailEditBtn">✏️ Edit</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EDIT PROFILE MODAL ══ -->
+<div class="modal-overlay" id="editProfileOverlay" onclick="closeEPModal(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><div class="modal-title">Edit Profile</div><div class="modal-close" onclick="closeEPModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="modal-body">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;padding:16px;background:var(--surface2);border-radius:var(--r-sm)">
+        <div style="width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700">AR</div>
+        <div><button class="btn btn-ghost" style="font-size:12px">Upload Photo</button><div style="font-size:11px;color:var(--text3);margin-top:4px">PNG, JPG up to 2MB</div></div>
+      </div>
+      <div class="form-row"><div class="form-group"><label class="form-label">First Name</label><input class="form-input" value="Aishwarya"></div><div class="form-group"><label class="form-label">Last Name</label><input class="form-input" value="Rajeshirke"></div></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" value="aishwarya.rajeshirke@company.com"></div>
+      <div class="form-row"><div class="form-group"><label class="form-label">Job Title</label><input class="form-input" value="Business Analyst"></div><div class="form-group"><label class="form-label">Department</label><input class="form-input" value="IT Division"></div></div>
+      <div class="form-group"><label class="form-label">Location</label><input class="form-input" value="Pune, Maharashtra"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeEPModal()">Cancel</button><button class="btn btn-primary" onclick="closeEPModal();showToast('✅','Profile updated successfully')">Save Changes</button></div>
+  </div>
+</div>
+
+<!-- ══ CHANGE PASSWORD MODAL ══ -->
+<div class="modal-overlay" id="changePwdOverlay" onclick="closePwdModal(event)">
+  <div class="modal" style="width:440px" onclick="event.stopPropagation()">
+    <div class="modal-header"><div class="modal-title">Change Password</div><div class="modal-close" onclick="closePwdModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Current Password</label><input class="form-input" type="password" placeholder="Enter current password"></div>
+      <div class="form-group"><label class="form-label">New Password</label><input class="form-input" type="password" id="pwdNew" placeholder="Min 8 characters"></div>
+      <div class="form-group"><label class="form-label">Confirm New Password</label><input class="form-input" type="password" id="pwdConfirm" placeholder="Repeat new password"></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closePwdModal()">Cancel</button><button class="btn btn-primary" onclick="savePwd()">Update Password</button></div>
+  </div>
+</div>
+
+<!-- ══ INVITE MODAL ══ -->
+<div class="modal-overlay" id="inviteOverlay" onclick="closeInviteModal(event)">
+  <div class="modal" style="width:460px" onclick="event.stopPropagation()">
+    <div class="modal-header"><div class="modal-title">Invite Team Member</div><div class="modal-close" onclick="closeInviteModal()"><svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18" stroke-width="2" stroke-linecap="round"/><line x1="6" y1="6" x2="18" y2="18" stroke-width="2" stroke-linecap="round"/></svg></div></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="invName" placeholder="e.g. Rahul Sharma"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="invEmail" type="email" placeholder="e.g. rahul@company.com"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Role</label><select class="form-input" id="invRole"><option>Business Analyst</option><option>Project Manager</option><option>Developer</option><option>QA Engineer</option><option>Stakeholder</option></select></div>
+        <div class="form-group"><label class="form-label">Department</label><input class="form-input" id="invDept" placeholder="IT Division"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-ghost" onclick="closeInviteModal()">Cancel</button><button class="btn btn-primary" onclick="sendInvite()">Send Invitation</button></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastIcon">✅</span><span id="toastMsg">Done!</span></div>
+
+<script>
+// ══════════════════════════════════════════════════
+// DATA — 100 Real IT/Business Change Requests
+// ══════════════════════════════════════════════════
+const OWNERS = ['Aishwarya Rajeshirke','Dev Patel','Priya Mehta','Sara Lim','Neha Roy','Rohit Sharma','Ananya Iyer','Karan Joshi','Meera Nair','Vikram Singh'];
+const TYPES = ['Technical','Business','Regulatory','Process','UI/UX','Data','Infrastructure','Security'];
+const IMPACTS = ['Customer Portal','Auth Service','API Gateway','Finance Module','HR System','Inventory','CRM','Data Platform','Mobile App','Billing','ERP','Compliance Engine','Reporting Suite','DevOps Pipeline','Service Desk'];
+const PRIORITIES = ['critical','critical','high','high','high','medium','medium','medium','medium','low'];
+const STATUSES = ['open','open','progress','progress','review','done','done','done','rejected','open'];
+
+const RAW_CHANGES = [
+  ['Migrate legacy CRM to Salesforce','Full migration of on-premise CRM (ACT!) to Salesforce Sales Cloud including data mapping for 45,000 customer records.','critical','progress','Business','Aishwarya Rajeshirke','CRM, Sales Team','2025-01-08'],
+  ['GDPR Article 30 compliance documentation','Create and maintain Records of Processing Activities (ROPA) as mandated by GDPR Article 30 across all IT systems.','critical','open','Regulatory','Aishwarya Rajeshirke','Data Platform, Legal','2025-01-10'],
+  ['Implement MFA for all admin accounts','Enforce multi-factor authentication via Okta for all 320 admin-level accounts across cloud and on-prem systems.','critical','done','Security','Dev Patel','Auth Service, IAM','2025-01-05'],
+  ['Real-time inventory sync with e-commerce','Integrate SAP WM warehouse system with Shopify store to synchronise stock levels every 5 minutes via REST API.','critical','progress','Technical','Dev Patel','Inventory, e-Commerce','2025-01-12'],
+  ['Payment gateway PCI-DSS re-certification','Annual PCI-DSS Level 1 re-certification covering card data environment, network segmentation and penetration testing.','critical','review','Regulatory','Priya Mehta','Payment Gateway, Finance','2025-01-15'],
+  ['Customer portal SSO integration','Implement SAML 2.0 SSO between the customer portal and Azure AD so users authenticate once across all products.','high','done','Technical','Dev Patel','Customer Portal, Auth','2025-01-07'],
+  ['Revamp employee onboarding workflow','Redesign 14-step manual onboarding into an automated digital workflow in ServiceNow with HR, IT and Payroll tasks.','high','progress','Process','Aishwarya Rajeshirke','HR System, ServiceNow','2025-01-20'],
+  ['API rate limiting and throttling rules','Define and enforce per-tenant rate limits (1000 req/min) on all public-facing API endpoints via Kong Gateway.','high','done','Technical','Dev Patel','API Gateway','2025-01-09'],
+  ['Annual data retention policy review','Update data retention schedules for all 12 business systems to align with revised legal hold requirements.','high','open','Regulatory','Aishwarya Rajeshirke','Data Platform, Compliance','2025-01-22'],
+  ['Finance module budget vs actuals dashboard','Build Power BI dashboard showing real-time budget vs actuals by department, cost centre and project code.','high','done','Business','Rohit Sharma','Finance Module, BI','2025-01-06'],
+  ['Upgrade PostgreSQL 12 to 15 across all environments','In-place major version upgrade of PostgreSQL across dev, staging and production with zero-downtime strategy.','high','progress','Infrastructure','Dev Patel','All Systems, DevOps','2025-02-03'],
+  ['Supplier portal self-service onboarding','Allow suppliers to self-register, upload documents and track approval status through a new B2B portal.','high','open','Business','Ananya Iyer','Procurement, Supplier Portal','2025-02-05'],
+  ['Decommission legacy FTP file transfer system','Replace FTP with SFTP and secure API endpoints; migrate 28 automated batch jobs currently using legacy FTP.','high','done','Infrastructure','Dev Patel','Integration Layer, DevOps','2025-01-28'],
+  ['WCAG 2.1 AA accessibility remediation','Full accessibility audit and remediation of customer-facing web properties to meet WCAG 2.1 AA standard.','high','progress','UI/UX','Sara Lim','Customer Portal, Mobile App','2025-02-10'],
+  ['Automated regression test suite — Finance','Build Selenium + pytest regression suite covering 240 critical Finance module test cases, integrated with CI/CD.','high','review','Technical','Neha Roy','Finance Module, CI/CD','2025-02-01'],
+  ['HRMS leave management module upgrade','Upgrade leave management module in Oracle HCM to support new statutory leave types per 2025 labour regulations.','high','done','Regulatory','Aishwarya Rajeshirke','HR System, Payroll','2025-01-18'],
+  ['Service desk ticket auto-routing','Implement ML-based ticket classification in Jira Service Management to auto-route tickets to correct team queues.','medium','progress','Technical','Karan Joshi','Service Desk, AI/ML','2025-02-12'],
+  ['Customer feedback NPS automation','Automate NPS survey dispatch, collection and sentiment analysis post every support ticket closure via Medallia.','medium','open','Business','Sara Lim','CRM, Customer Portal','2025-02-14'],
+  ['Consolidated procurement spend report','Create monthly spend consolidation report pulling from SAP Ariba, Oracle Financials and Coupa into one view.','medium','done','Data','Rohit Sharma','Finance, Procurement','2025-01-25'],
+  ['Mobile app iOS 17 compatibility update','Resolve 11 deprecated API warnings and update push notification entitlements for iOS 17 compliance.','medium','done','Technical','Dev Patel','Mobile App','2025-01-30'],
+  ['Implement DMARC and SPF email security','Configure DMARC policy (p=reject), SPF and DKIM for all 8 email-sending domains to prevent spoofing.','medium','done','Security','Karan Joshi','Email Infrastructure','2025-01-16'],
+  ['ERP purchase order approval workflow redesign','Simplify 9-step PO approval chain to 4 steps for orders under ₹5L; update SAP Workflow and notify approvers.','medium','progress','Process','Aishwarya Rajeshirke','ERP, Finance','2025-02-18'],
+  ['Data quality dashboard for master data','Build data quality scorecard in Collibra tracking completeness, uniqueness and accuracy for customer master data.','medium','review','Data','Ananya Iyer','Data Platform, MDM','2025-02-08'],
+  ['Kubernetes cluster cost optimisation','Right-size over-provisioned k8s nodes; implement cluster autoscaler to reduce cloud spend by estimated 30%.','medium','open','Infrastructure','Dev Patel','Cloud, DevOps','2025-02-20'],
+  ['Automated payslip distribution','Replace manual payslip email distribution with automated PDF generation and employee self-service download from HRMS.','medium','done','Process','Rohit Sharma','HR System, Payroll','2025-01-22'],
+  ['Product catalogue taxonomy redesign','Restructure 48,000-SKU product catalogue into a 4-level taxonomy to improve search relevance and filter accuracy.','medium','open','Business','Ananya Iyer','e-Commerce, CRM','2025-02-22'],
+  ['Disaster recovery runbook update','Update DR runbooks for 12 critical systems post-cloud migration; validate RTO/RPO targets with tabletop exercise.','medium','progress','Infrastructure','Vikram Singh','All Systems, DR','2025-02-15'],
+  ['User access recertification automation','Automate quarterly user access recertification in SailPoint IIQ for all 1,400 user accounts across 34 applications.','medium','done','Security','Karan Joshi','IAM, Compliance','2025-01-20'],
+  ['Warehouse mobile scanner app upgrade','Upgrade Zebra scanner app to support new barcode formats and integrate with updated SAP WM API.','medium','done','Technical','Dev Patel','Inventory, WMS','2025-01-28'],
+  ['Business continuity plan 2025 refresh','Annual BCP review and update for IT services; includes risk reassessment, contact updates and exercise scheduling.','medium','open','Process','Priya Mehta','All Departments','2025-02-25'],
+  ['SLA breach alerting in ServiceNow','Configure real-time SLA breach email and Slack alerts for P1 and P2 tickets approaching breach thresholds.','medium','done','Technical','Karan Joshi','Service Desk','2025-01-31'],
+  ['Customer segmentation model — ML','Build Python-based customer segmentation using RFM analysis and k-means clustering on 3-year purchase history.','medium','review','Data','Ananya Iyer','Data Platform, CRM','2025-02-16'],
+  ['Office 365 tenant consolidation','Merge 3 regional O365 tenants into single global tenant; migrate 680 mailboxes with zero data loss.','high','done','Infrastructure','Vikram Singh','IT Infrastructure, Comms','2025-01-14'],
+  ['Vendor contract management system','Implement Ironclad contract lifecycle management system to replace spreadsheet-based vendor contract tracking.','medium','progress','Business','Priya Mehta','Legal, Procurement','2025-02-28'],
+  ['Android app biometric authentication','Add fingerprint and face-ID login to Android app using BiometricPrompt API with fallback to PIN.','medium','done','Technical','Dev Patel','Mobile App, Security','2025-02-02'],
+  ['Sales commission calculation automation','Automate quarterly sales commission calculations replacing manual Excel model; integrate with Salesforce and Payroll.','high','open','Business','Rohit Sharma','Finance, CRM','2025-03-02'],
+  ['Network segmentation for PCI environment','Implement VLAN-based network segmentation to isolate cardholder data environment per PCI-DSS requirement 1.3.','high','progress','Security','Vikram Singh','Network, Payment GW','2025-03-04'],
+  ['Customer loyalty programme — Phase 2','Extend loyalty programme to include tier-based rewards, referral bonuses and partner redemption catalogue.','medium','open','Business','Sara Lim','Customer Portal, CRM','2025-03-06'],
+  ['ServiceNow CMDB data clean-up','Remediate 4,200 stale CI records in CMDB; implement auto-discovery reconciliation to maintain accuracy.','medium','progress','Data','Karan Joshi','CMDB, Service Desk','2025-03-08'],
+  ['RPA bot for accounts payable matching','Deploy UiPath bot to automate 3-way PO-GRN-Invoice matching; expected to save 40 man-hours per month.','high','review','Process','Aishwarya Rajeshirke','Finance, ERP','2025-03-01'],
+  ['Cloud storage lifecycle policy','Implement S3/Azure Blob lifecycle policies to automatically tier cold data to archive storage after 90 days.','low','done','Infrastructure','Dev Patel','Cloud, Storage','2025-02-10'],
+  ['Ethics hotline portal — anonymous reporting','Deploy Navex Global ethics reporting platform for anonymous whistleblower submissions per policy requirement.','medium','done','Regulatory','Priya Mehta','Compliance, Legal','2025-01-26'],
+  ['Customer churn prediction model','Build gradient-boosted churn prediction model to flag high-risk accounts for proactive retention outreach.','medium','progress','Data','Ananya Iyer','Data Platform, CRM','2025-03-10'],
+  ['Barcode label print standardisation','Standardise barcode label formats across 6 warehouses to Zebra ZPL format; update print templates in SAP.','low','done','Process','Neha Roy','Inventory, WMS','2025-02-06'],
+  ['Help desk knowledge base migration','Migrate 1,200 KB articles from deprecated Confluence space to ServiceNow Knowledge Management module.','low','done','Process','Karan Joshi','Service Desk','2025-02-04'],
+  ['Pension payroll integration — new provider','Integrate payroll system with new pension provider (Aviva) API for automated contribution file submission.','high','review','Business','Rohit Sharma','Payroll, HR System','2025-03-05'],
+  ['Zero trust network access rollout','Phase 1 rollout of Zscaler ZPA to 500 remote workers; replace legacy VPN for application access.','high','progress','Security','Vikram Singh','Network, IAM','2025-03-12'],
+  ['ERP month-end close process optimisation','Reduce month-end close from 8 days to 5 days by automating 3 manual reconciliation steps in Oracle Financials.','high','open','Process','Aishwarya Rajeshirke','Finance, ERP','2025-03-15'],
+  ['Marketing automation platform migration','Migrate from Mailchimp to HubSpot Marketing Hub; move 85 active email journeys and 220K contacts.','medium','progress','Business','Sara Lim','CRM, Marketing','2025-03-14'],
+  ['Warehouse dock scheduling system','Implement dock scheduling module to coordinate inbound/outbound truck appointments and reduce yard congestion.','medium','open','Business','Ananya Iyer','Inventory, WMS','2025-03-18'],
+  ['API deprecation — v1 sunset plan','Plan and communicate deprecation of public API v1; migrate 34 external consumers to v2 by July 2025.','high','open','Technical','Dev Patel','API Gateway, Partners','2025-03-20'],
+  ['ISO 27001 gap assessment and remediation','Conduct gap assessment against ISO 27001:2022 controls; create remediation roadmap targeting certification in Q4.','high','progress','Regulatory','Vikram Singh','All IT Systems','2025-03-10'],
+  ['HR analytics dashboard — attrition metrics','Build Power BI HR analytics dashboard tracking headcount, attrition rate, tenure and recruitment pipeline.','medium','done','Data','Rohit Sharma','HR System, BI','2025-02-20'],
+  ['On-call schedule automation','Replace manual on-call roster management with PagerDuty auto-scheduling integrated with ServiceNow major incidents.','low','done','Process','Karan Joshi','Service Desk, DevOps','2025-02-15'],
+  ['Customer address validation at checkout','Integrate address validation API (Loqate) at checkout to reduce failed deliveries from 3.2% to under 0.5%.','medium','done','Technical','Dev Patel','e-Commerce, CRM','2025-02-22'],
+  ['Product returns portal — self-service','Launch self-service returns portal allowing customers to initiate returns, print labels and track refund status.','high','review','UI/UX','Sara Lim','Customer Portal, e-Commerce','2025-03-08'],
+  ['Legacy COBOL batch job modernisation — Phase 1','Rewrite 8 critical COBOL batch jobs in Python; maintain backward compatibility with downstream consumers.','critical','progress','Technical','Dev Patel','Finance, Legacy Systems','2025-03-05'],
+  ['Single view of customer — data lake','Build unified customer profile in Azure Data Lake aggregating data from CRM, e-commerce, support and marketing.','high','progress','Data','Ananya Iyer','Data Platform, All','2025-03-22'],
+  ['VAT submission automation — Making Tax Digital','Automate VAT return preparation and submission to HMRC via MTD API, replacing current manual process.','high','review','Regulatory','Aishwarya Rajeshirke','Finance, Compliance','2025-03-12'],
+  ['ServiceNow upgrade — San Diego to Vancouver','Major platform upgrade of ServiceNow from San Diego to Vancouver release; includes ITSM and ITOM modules.','critical','progress','Infrastructure','Vikram Singh','Service Desk, CMDB','2025-03-18'],
+  ['Chatbot for customer support tier-1','Deploy GPT-4-powered chatbot to handle tier-1 support queries; target 40% deflection from human agents.','high','open','Technical','Karan Joshi','Customer Portal, Service Desk','2025-03-25'],
+  ['Contract renewal alert workflow','Implement 90/60/30-day automated renewal alerts in contract management system sent to contract owners and legal.','medium','done','Process','Priya Mehta','Legal, Procurement','2025-02-28'],
+  ['Document management — SharePoint migration','Migrate 2.4TB of departmental documents from legacy file server to SharePoint Online with metadata tagging.','medium','progress','Infrastructure','Vikram Singh','All Departments','2025-04-01'],
+  ['Advanced threat protection — endpoint','Deploy CrowdStrike Falcon EDR across 1,800 endpoints to replace legacy Symantec AV; includes SOC integration.','critical','progress','Security','Vikram Singh','All Endpoints, SOC','2025-03-28'],
+  ['Procurement approval mobile app','Build React Native app for managers to approve purchase orders on mobile with push notification and delegation.','medium','review','UI/UX','Sara Lim','Procurement, Finance','2025-03-20'],
+  ['Data anonymisation for test environments','Implement Informatica data masking to anonymise PII in all non-production database copies per GDPR requirement.','high','done','Security','Aishwarya Rajeshirke','All Dev/Test DBs','2025-03-02'],
+  ['Energy consumption monitoring dashboard','Deploy IoT sensors and Power BI dashboard to track real-time energy usage across 4 office locations.','low','open','Infrastructure','Rohit Sharma','Facilities, IoT','2025-04-05'],
+  ['Automated backup validation testing','Implement weekly automated restore tests for all Tier-1 system backups; results to CMDB and email report.','medium','done','Infrastructure','Dev Patel','All Systems, DR','2025-03-15'],
+  ['Sales order fulfilment SLA tracking','Build real-time order fulfilment SLA tracker showing promise vs actual ship dates with breach alerting.','medium','progress','Business','Ananya Iyer','e-Commerce, Inventory','2025-04-02'],
+  ['Unified communications — Microsoft Teams rollout','Migrate 900 users from Cisco UC to Microsoft Teams for calling, video and messaging with PSTN integration.','high','done','Infrastructure','Vikram Singh','All Staff, Comms','2025-02-08'],
+  ['Supplier performance scorecard','Quarterly automated supplier scorecard scoring delivery accuracy, invoice accuracy and quality metrics from SAP.','medium','open','Business','Priya Mehta','Procurement, ERP','2025-04-07'],
+  ['ITAM software licence reconciliation','Reconcile all 380 software licences against active users; identify over-provisioning and reclaim unused seats.','medium','done','Process','Karan Joshi','ITAM, Finance','2025-03-10'],
+  ['Customer pricing engine upgrade','Upgrade pricing engine to support dynamic pricing rules, volume discounts and promotional codes at product level.','high','progress','Business','Rohit Sharma','e-Commerce, CRM','2025-04-04'],
+  ['Remote desktop VDI rollout — finance team','Deploy VMware Horizon VDI to 85 Finance staff for secure remote access to ERP and sensitive financial apps.','high','review','Infrastructure','Vikram Singh','Finance, Remote Work','2025-04-01'],
+  ['Leave management mobile self-service','Allow employees to apply for, approve and view leave balances from Oracle HCM mobile app.','low','done','UI/UX','Sara Lim','HR System, Mobile','2025-03-20'],
+  ['Vulnerability management programme — Q2','Conduct quarterly vulnerability scan across 340 servers; triage findings and assign remediation by risk level.','high','open','Security','Vikram Singh','All Servers, SOC','2025-04-08'],
+  ['Customer invoice portal — self-service','Allow B2B customers to view, download and dispute invoices through a self-service portal integrated with Billing.','medium','open','Business','Aishwarya Rajeshirke','Billing, Customer Portal','2025-04-10'],
+  ['Data pipeline for regulatory reporting','Build automated data pipeline to produce daily regulatory reports for FCA submission, replacing manual extract.','high','progress','Data','Ananya Iyer','Finance, Compliance','2025-04-06'],
+  ['Social media complaint monitoring','Integrate Brandwatch with CRM to auto-create support tickets from negative social media mentions within 15 min.','low','open','Business','Sara Lim','CRM, Customer Service','2025-04-12'],
+  ['Third-party API security assessment','Conduct security review of 22 third-party API integrations; enforce OAuth 2.0 and mutual TLS where absent.','high','review','Security','Karan Joshi','API Gateway, Security','2025-04-05'],
+  ['Automated SLA reporting to customers','Monthly SLA performance reports auto-generated per client and emailed from ServiceNow with breach analysis.','medium','open','Process','Priya Mehta','Service Desk, CRM','2025-04-14'],
+  ['Cloud cost governance policy','Define tagging strategy, budget alerts and approval process for cloud spend; target 15% quarterly cost reduction.','medium','done','Infrastructure','Dev Patel','Cloud, Finance','2025-03-28'],
+  ['Customer returns fraud detection','ML model to detect fraudulent return patterns (serial returners, wardrobing) using order and return history.','medium','progress','Data','Ananya Iyer','e-Commerce, Finance','2025-04-08'],
+  ['Internal audit trail dashboard','Real-time dashboard showing user activity logs, data access events and admin changes for audit purposes.','high','open','Security','Aishwarya Rajeshirke','All Systems, Compliance','2025-04-15'],
+  ['Power BI premium licence rollout','Deploy Power BI Premium Per User (PPU) licences to 120 report authors; migrate 340 reports from Pro.','medium','done','Infrastructure','Rohit Sharma','BI, All Departments','2025-03-22'],
+  ['Multi-currency billing support','Extend billing system to support USD, EUR and AED invoicing for international clients with FX rate integration.','high','open','Business','Rohit Sharma','Billing, Finance','2025-04-16'],
+  ['Pension auto-enrolment compliance audit','Audit auto-enrolment process for 2,100 eligible employees; ensure postponement notices and opt-out records are complete.','high','done','Regulatory','Aishwarya Rajeshirke','Payroll, HR System','2025-03-08'],
+  ['IT asset disposal (ITAD) process formalisation','Define secure asset disposal SOP covering data wiping certification and WEEE-compliant disposal for end-of-life hardware.','low','done','Process','Karan Joshi','ITAM, Facilities','2025-03-12'],
+  ['Expense claim OCR automation','Deploy OCR (ABBYY) to auto-extract data from expense receipts; integrate with Concur for claim pre-population.','medium','progress','Process','Priya Mehta','Finance, HR System','2025-04-10'],
+  ['Event-driven architecture — Phase 1','Introduce Apache Kafka as event streaming backbone for order, inventory and payment event flows; replace point-to-point.','critical','open','Technical','Dev Patel','Integration, All Systems','2025-04-12'],
+  ['Intranet portal redesign','Redesign SharePoint-based intranet with new IA, mega-nav, staff directory and departmental news feeds.','medium','review','UI/UX','Sara Lim','Intranet, Comms','2025-04-08'],
+  ['Helpdesk first-call resolution tracking','Implement FCR metric tracking in ServiceNow; report weekly by team and agent with coaching workflow for under-performers.','low','open','Process','Neha Roy','Service Desk','2025-04-18'],
+  ['Customer data enrichment — third party','Enrich customer records with firmographic data from Dun & Bradstreet API; update 18,000 B2B account records.','medium','done','Data','Ananya Iyer','CRM, Data Platform','2025-04-02'],
+  ['Fraud monitoring — real-time transaction alerts','Integrate Featurespace ARIC fraud detection engine with payment gateway for real-time transaction scoring.','critical','open','Security','Vikram Singh','Payment GW, Finance','2025-04-14'],
+  ['Compliance training LMS implementation','Deploy Cornerstone LMS; migrate 40 mandatory compliance training modules and auto-assign to role-based groups.','medium','progress','Regulatory','Neha Roy','HR System, Compliance','2025-04-16'],
+  ['Order management — partial shipment support','Extend OMS to allow partial shipments and split order fulfilment from multiple warehouse locations.','medium','open','Business','Ananya Iyer','e-Commerce, Inventory','2025-04-20'],
+  ['SaaS sprawl audit and rationalisation','Audit 112 SaaS subscriptions; identify duplicates and unused tools; recommend consolidation to save ₹40L p.a.','high','progress','Process','Aishwarya Rajeshirke','ITAM, Finance','2025-04-18'],
+  ['API gateway migration — Kong to AWS API GW','Migrate 68 API routes from Kong to AWS API Gateway as part of cloud-native architecture programme.','high','open','Technical','Dev Patel','API Gateway, Cloud','2025-04-22'],
+  ['Vendor invoice OCR and e-invoicing','Implement e-invoicing (PEPPOL) and OCR for paper invoice digitisation; integrate with Oracle AP module.','medium','review','Process','Rohit Sharma','Finance, Procurement','2025-04-10'],
+  ['ESG reporting data pipeline','Build automated ESG data pipeline aggregating carbon, energy and waste metrics for annual sustainability report.','medium','open','Data','Rohit Sharma','Facilities, Finance, ESG','2025-04-24'],
+];
+
+// Build changes array
+let changes = RAW_CHANGES.map((r,i)=>({
+  id:`CR-${String(i+1).padStart(3,'0')}`,
+  title:r[0],desc:r[1],priority:r[2],status:r[3],type:r[4],owner:r[5],impact:r[6],
+  created:r[7],updated:r[7],
+  log:[{text:'Change request created and logged',time:r[7]},{text:`Priority set to ${r[2]}, assigned to ${r[5]}`,time:r[7]}]
+}));
+
+// Try localStorage; fall back to seed
+const SK='ba_v3';
+try{const s=localStorage.getItem(SK);if(s){const p=JSON.parse(s);if(p.length>=100)changes=p;}else{localStorage.setItem(SK,JSON.stringify(changes));}}catch{}
+
+function save(){try{localStorage.setItem(SK,JSON.stringify(changes));}catch{}}
+function nextId(){return `CR-${String(Math.max(0,...changes.map(c=>parseInt(c.id.replace('CR-',''))||0))+1).padStart(3,'0')}`;}
+
+const avatarColors=['#4f7bff','#22d3a4','#f5a623','#7c5cfc','#ff5c5c','#38b2f5','#ff9f43','#48dbfb','#ff6b9d','#00d2d3'];
+function aColor(n){return avatarColors[n.charCodeAt(0)%avatarColors.length];}
+function initials(n){return n.split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase();}
+
+const STATUS_COLORS={open:'var(--info)',progress:'var(--warning)',review:'var(--accent2)',done:'var(--success)',rejected:'var(--danger)'};
+const STATUS_LABELS={open:'Open',progress:'In Progress',review:'In Review',done:'Done',rejected:'Rejected'};
+const PIE_COLORS=['#38b2f5','#f5a623','#7c5cfc','#22d3a4','#ff5c5c'];
+
+function statusBadge(s){const m={open:'badge-open Open',progress:'badge-progress In Progress',review:'badge-review In Review',done:'badge-done Done',rejected:'badge-rejected Rejected'};const[cls,...r]=(m[s]||'badge-open Open').split(' ');return `<span class="badge ${cls}">${r.join(' ')}</span>`;}
+function priorityBadge(p){return `<span class="badge badge-${p}">${p.charAt(0).toUpperCase()+p.slice(1)}</span>`;}
+
+// ══ NAV ══════════════════════════════════════════
+let curPage='dashboard',curFilter='all',editingId=null;
+function switchPage(p){
+  document.querySelectorAll('.page').forEach(el=>el.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.remove('active'));
+  document.getElementById(`page-${p}`).classList.add('active');
+  const ni=document.getElementById(`nav-${p}`);if(ni)ni.classList.add('active');
+  curPage=p;
+  const renders={dashboard:renderDashboard,changes:renderChanges,analytics:renderAnalytics,workflow:renderWorkflow,notifications:renderNotifications,teams:renderTeams,profile:renderProfile};
+  if(renders[p])renders[p]();
+}
+
+// ══ HELPERS ══════════════════════════════════════
+function makeBars(containerId,entries){
+  const max=Math.max(1,...entries.map(e=>e[1]));
+  document.getElementById(containerId).innerHTML=entries.map(([lbl,cnt,col])=>
+    `<div class="bar-row"><div class="bar-lbl" title="${lbl}">${lbl}</div><div class="bar-track"><div class="bar-fill" data-w="${Math.round(cnt/max*100)}" style="width:0%;background:${col}"></div></div><div class="bar-num">${cnt}</div></div>`
+  ).join('');
+  setTimeout(()=>document.querySelectorAll(`#${containerId} .bar-fill`).forEach(b=>b.style.width=b.dataset.w+'%'),60);
+}
+
+function buildSVGPie(containerId, dataMap, colors){
+  const total=Object.values(dataMap).reduce((a,b)=>a+b,0);
+  if(!total){document.getElementById(containerId).innerHTML='<div style="color:var(--text3);font-size:12px">No data</div>';return;}
+  const labels=Object.keys(dataMap),vals=labels.map(l=>dataMap[l]);
+  const cx=70,cy=70,r=60;
+  let startAngle=-Math.PI/2;
+  let paths='',legendHTML='';
+  vals.forEach((v,i)=>{
+    const ang=(v/total)*2*Math.PI;
+    const x1=cx+r*Math.cos(startAngle),y1=cy+r*Math.sin(startAngle);
+    const x2=cx+r*Math.cos(startAngle+ang),y2=cy+r*Math.sin(startAngle+ang);
+    const lg=ang>Math.PI?1:0;
+    paths+=`<path d="M${cx},${cy} L${x1.toFixed(1)},${y1.toFixed(1)} A${r},${r} 0 ${lg},1 ${x2.toFixed(1)},${y2.toFixed(1)} Z" fill="${colors[i%colors.length]}" opacity="0.9" stroke="var(--surface)" stroke-width="2"/>`;
+    const pct=Math.round(v/total*100);
+    legendHTML+=`<div class="legend-row"><div class="legend-dot" style="background:${colors[i%colors.length]}"></div><span>${STATUS_LABELS[labels[i]]||labels[i]}</span><span class="legend-pct">${v} (${pct}%)</span></div>`;
+    startAngle+=ang;
+  });
+  document.getElementById(containerId).innerHTML=`
+    <svg width="140" height="140" viewBox="0 0 140 140" style="flex-shrink:0">${paths}</svg>
+    <div class="pie-legend">${legendHTML}</div>`;
+}
+
+// ══ DASHBOARD ═══════════════════════════════════
+function renderDashboard(){
+  document.getElementById('dashDate').textContent=new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const total=changes.length,active=changes.filter(c=>['open','progress'].includes(c.status)).length,
+        done=changes.filter(c=>c.status==='done').length,crit=changes.filter(c=>c.priority==='critical'&&c.status!=='done').length;
+  document.getElementById('statTotal').textContent=total;
+  document.getElementById('statActive').textContent=active;
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statCritical').textContent=crit;
+  setTimeout(()=>{
+    document.getElementById('barActive').style.width=Math.round(active/total*100)+'%';
+    document.getElementById('barDone').style.width=Math.round(done/total*100)+'%';
+    document.getElementById('barCritical').style.width=Math.round(crit/total*100)+'%';
+  },80);
+  const urg=active;const badge=document.getElementById('sideChangeBadge');
+  badge.textContent=urg>9?'9+':urg;badge.style.display=urg?'flex':'none';
+
+  const recent=[...changes].sort((a,b)=>new Date(b.updated)-new Date(a.updated)).slice(0,8);
+  document.getElementById('dashTable').innerHTML=recent.map(c=>`
+    <tr onclick="showDetail('${c.id}')">
+      <td class="td-id">${c.id}</td>
+      <td><div class="td-title">${c.title}</div><div class="td-desc">${c.desc}</div></td>
+      <td>${priorityBadge(c.priority)}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td style="font-size:12px">${c.owner.split(' ')[0]} ${c.owner.split(' ')[1]?c.owner.split(' ')[1][0]+'.':''}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${c.updated}</td>
+    </tr>`).join('');
+
+  // Status pie in sidebar
+  const statusMap={};changes.forEach(c=>{statusMap[c.status]=(statusMap[c.status]||0)+1;});
+  buildSVGPie('dashPie',statusMap,PIE_COLORS);
+
+  // Owner bars in sidebar
+  const ownerMap={};changes.forEach(c=>{ownerMap[c.owner]=(ownerMap[c.owner]||0)+1;});
+  const top5=Object.entries(ownerMap).sort((a,b)=>b[1]-a[1]).slice(0,5);
+  const maxO=Math.max(...top5.map(e=>e[1]));
+  document.getElementById('dashOwnerBars').innerHTML=top5.map(([o,cnt],i)=>
+    `<div class="bar-row"><div class="bar-lbl">${o.split(' ')[0]}</div><div class="bar-track"><div class="bar-fill" data-w="${Math.round(cnt/maxO*100)}" style="width:0%;background:${avatarColors[i%avatarColors.length]}"></div></div><div class="bar-num">${cnt}</div></div>`
+  ).join('');
+  setTimeout(()=>document.querySelectorAll('#dashOwnerBars .bar-fill').forEach(b=>b.style.width=b.dataset.w+'%'),80);
+}
+
+// ══ CHANGES TABLE ════════════════════════════════
+function renderChanges(){
+  const q=(document.getElementById('globalSearch')?.value||'').toLowerCase();
+  let list=changes.filter(c=>{
+    if(curFilter==='all')return true;
+    if(curFilter==='critical')return c.priority==='critical';
+    if(curFilter==='high')return c.priority==='high';
+    return c.status===curFilter;
+  }).filter(c=>!q||[c.title,c.desc,c.id,c.owner,c.type,c.impact].some(f=>f.toLowerCase().includes(q)));
+  list=[...list].sort((a,b)=>new Date(b.updated)-new Date(a.updated));
+  document.getElementById('changesSubtitle').textContent=`${list.length} of ${changes.length} change requests`;
+  if(!list.length){document.getElementById('changesTable').innerHTML=`<tr><td colspan="9" style="text-align:center;padding:60px;color:var(--text3)">No results found for current filter</td></tr>`;return;}
+  document.getElementById('changesTable').innerHTML=list.map(c=>`
+    <tr onclick="showDetail('${c.id}')">
+      <td class="td-id">${c.id}</td>
+      <td><div class="td-title">${c.title}</div><div class="td-desc">${c.desc}</div></td>
+      <td><span style="font-size:11px;color:var(--text2)">${c.type}</span></td>
+      <td>${priorityBadge(c.priority)}</td>
+      <td>${statusBadge(c.status)}</td>
+      <td><div style="display:flex;align-items:center;gap:6px"><div class="avatar" style="background:${aColor(c.owner)}20;color:${aColor(c.owner)}">${initials(c.owner)}</div><span style="font-size:12px">${c.owner.split(' ').slice(0,2).join(' ')}</span></div></td>
+      <td style="font-size:11px;color:var(--text2);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.impact||'—'}</td>
+      <td style="font-family:var(--mono);font-size:11px;color:var(--text3)">${c.updated}</td>
+      <td onclick="event.stopPropagation()" style="white-space:nowrap"><button class="btn btn-ghost btn-sm" onclick="editChange('${c.id}')">Edit</button> <button class="btn btn-danger btn-sm" onclick="deleteChange('${c.id}')">Del</button></td>
+    </tr>`).join('');
+}
+
+function setFilter(f,el){curFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));if(el)el.classList.add('active');renderChanges();}
+function globalSearchFn(){if(curPage!=='changes')switchPage('changes');else renderChanges();}
+
+// ══ ANALYTICS ════════════════════════════════════
+function renderAnalytics(){
+  const total=changes.length,done=changes.filter(c=>c.status==='done').length;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('completionPct').textContent=pct+'%';
+  const circ=2*Math.PI*44;
+  document.getElementById('completionRing').setAttribute('stroke-dashoffset',circ*(1-pct/100));
+
+  // Completion legend
+  const statuses=['open','progress','review','done','rejected'];
+  let leg='';statuses.forEach((s,i)=>{const cnt=changes.filter(c=>c.status===s).length;if(cnt)leg+=`<div class="legend-row"><div class="legend-dot" style="background:${PIE_COLORS[i]}"></div><span>${STATUS_LABELS[s]}</span><span class="legend-pct">${cnt}</span></div>`;});
+  document.getElementById('completionLegend').innerHTML=leg;
+
+  // Status pie
+  const statusMap={};changes.forEach(c=>{statusMap[c.status]=(statusMap[c.status]||0)+1;});
+  buildSVGPie('statusPieWrap',statusMap,PIE_COLORS);
+
+  // Priority bars
+  const pColors={critical:'var(--danger)',high:'var(--warning)',medium:'var(--info)',low:'var(--success)'};
+  makeBars('priorityBars',['critical','high','medium','low'].map(p=>[p.charAt(0).toUpperCase()+p.slice(1),changes.filter(c=>c.priority===p).length,pColors[p]]));
+
+  // Type bars
+  const types=[...new Set(changes.map(c=>c.type))].sort();
+  const maxT=Math.max(1,...types.map(t=>changes.filter(c=>c.type===t).length));
+  makeBars('typeBars',types.map((t,i)=>[t,changes.filter(c=>c.type===t).length,avatarColors[i%avatarColors.length]]));
+
+  // Owner bars (all owners)
+  const ownerMap={};changes.forEach(c=>{ownerMap[c.owner]=(ownerMap[c.owner]||0)+1;});
+  const ownerEntries=Object.entries(ownerMap).sort((a,b)=>b[1]-a[1]);
+  makeBars('ownerBars',ownerEntries.map(([o,cnt],i)=>[o,cnt,avatarColors[i%avatarColors.length]]));
+
+  // Monthly trend Jan-Jun 2025
+  const months=['2025-01','2025-02','2025-03','2025-04','2025-05','2025-06'];
+  const monthLabels=['Jan 2025','Feb 2025','Mar 2025','Apr 2025','May 2025','Jun 2025'];
+  makeBars('trendBars',months.map((m,i)=>{
+    const cnt=changes.filter(c=>c.created&&c.created.startsWith(m)).length;
+    return [monthLabels[i],cnt,'var(--accent)'];
+  }));
+}
+
+// ══ WORKFLOW LIVE CARDS ══════════════════════════
+function renderWorkflow(){
+  const stages=[
+    {label:'Request (Open)',filter:c=>c.status==='open',color:'var(--info)',icon:'📝'},
+    {label:'Approval (Review)',filter:c=>c.status==='review',color:'var(--warning)',icon:'✅'},
+    {label:'Development (In Progress)',filter:c=>c.status==='progress',color:'var(--accent2)',icon:'⚙️'},
+    {label:'Testing (In Review)',filter:c=>c.status==='review',color:'var(--accent)',icon:'🧪'},
+    {label:'Done (Closed)',filter:c=>c.status==='done',color:'var(--success)',icon:'🏁'},
+  ];
+  // Open=Request, Review=Approval+Testing (split), Progress=Dev, Done=Closure
+  const open=changes.filter(c=>c.status==='open').length;
+  const review=changes.filter(c=>c.status==='review').length;
+  const progress=changes.filter(c=>c.status==='progress').length;
+  const done=changes.filter(c=>c.status==='done').length;
+  const rejected=changes.filter(c=>c.status==='rejected').length;
+  const wfData=[
+    {label:'Request',count:open,color:'var(--info)',icon:'📝',sub:'Open CRs awaiting approval'},
+    {label:'Approval',count:Math.ceil(review/2),color:'var(--warning)',icon:'✅',sub:'In CRB review'},
+    {label:'Development',count:progress,color:'var(--accent2)',icon:'⚙️',sub:'Being built'},
+    {label:'Testing',count:Math.floor(review/2),color:'var(--accent)',icon:'🧪',sub:'In UAT'},
+    {label:'Closure',count:done,color:'var(--success)',icon:'🏁',sub:'Completed'},
+  ];
+  document.getElementById('wfLiveCards').innerHTML=wfData.map(w=>`
+    <div style="background:var(--surface);border:1px solid var(--border);border-top:3px solid ${w.color};border-radius:var(--r);padding:18px;text-align:center">
+      <div style="font-size:24px;margin-bottom:8px">${w.icon}</div>
+      <div style="font-size:28px;font-weight:700;font-family:var(--mono);color:${w.color}">${w.count}</div>
+      <div style="font-size:12px;font-weight:700;margin:4px 0">${w.label}</div>
+      <div style="font-size:11px;color:var(--text3)">${w.sub}</div>
+    </div>`).join('');
+}
+
+// ══ NOTIFICATIONS ════════════════════════════════
+const NOTIFS=[
+  {id:1,title:'CR-093 escalated to Critical',sub:'Fraud monitoring — real-time transaction alerts raised by Vikram Singh',time:'8m ago',read:false},
+  {id:2,title:'CR-057 COBOL modernisation — Sprint 2 started',sub:'Dev Patel has started development on CR-057',time:'35m ago',read:false},
+  {id:3,title:'CR-046 Pension payroll — review requested',sub:'Rohit Sharma has moved CR-046 to In Review',time:'2h ago',read:false},
+  {id:4,title:'CR-058 VAT MTD — approved by CRB',sub:'Change Review Board approved the VAT submission automation CR',time:'4h ago',read:true},
+  {id:5,title:'CR-003 MFA rollout — marked Done',sub:'Dev Patel closed the MFA change request',time:'Yesterday',read:true},
+  {id:6,title:'Weekly digest — 23 Apr 2025',sub:'18 CRs updated this week, 5 closed, 3 new critical',time:'2 days ago',read:true},
+  {id:7,title:'SLA breach warning: CR-036 Sales commission',sub:'CR-036 has been Open for 22 days — SLA target is 5 days for Approval',time:'3 days ago',read:true},
+];
+let notifs=[...NOTIFS];
+function renderNotifications(){
+  document.getElementById('notifList').innerHTML=notifs.map(n=>`
+    <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);cursor:pointer" onclick="markRead(${n.id})">
+      <div style="width:8px;height:8px;border-radius:50%;background:${n.read?'var(--surface3)':'var(--accent)'};margin-top:5px;flex-shrink:0"></div>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:${n.read?'500':'700'};color:${n.read?'var(--text2)':'var(--text)'];margin-bottom:2px">${n.title}</div>
+        <div style="font-size:12px;color:var(--text2)">${n.sub}</div>
+        <div style="font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:3px">${n.time}</div>
+      </div>
+    </div>`).join('');
+}
+function markRead(id){notifs=notifs.map(n=>n.id===id?{...n,read:true}:n);renderNotifications();}
+function markAllRead(){notifs=notifs.map(n=>({...n,read:true}));renderNotifications();showToast('✓','All marked as read');}
+
+// ══ TEAMS ════════════════════════════════════════
+let teamMembers=[
+  {name:'Aishwarya Rajeshirke',role:'Business Analyst',dept:'IT Division',color:'#4f7bff'},
+  {name:'Dev Patel',role:'Senior Developer',dept:'Engineering',color:'#22d3a4'},
+  {name:'Priya Mehta',role:'Project Manager',dept:'PMO',color:'#7c5cfc'},
+  {name:'Sara Lim',role:'UX Designer',dept:'Design',color:'#f5a623'},
+  {name:'Rohit Sharma',role:'Financial Analyst',dept:'Finance',color:'#ff9f43'},
+  {name:'Ananya Iyer',role:'Data Analyst',dept:'Data & Analytics',color:'#48dbfb'},
+  {name:'Karan Joshi',role:'IT Service Manager',dept:'IT Operations',color:'#ff6b9d'},
+  {name:'Neha Roy',role:'QA Engineer',dept:'Quality',color:'#ff5c5c'},
+  {name:'Vikram Singh',role:'Infrastructure Lead',dept:'IT Infrastructure',color:'#00d2d3'},
+];
+function renderTeams(){
+  document.getElementById('teamsList').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+    ${teamMembers.map((m,i)=>{
+      const cnt=changes.filter(c=>c.owner===m.name).length;
+      const done=changes.filter(c=>c.owner===m.name&&c.status==='done').length;
+      const pct=cnt?Math.round(done/cnt*100):0;
+      return `<div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r);padding:20px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+          <div style="width:44px;height:44px;border-radius:12px;background:${m.color}20;color:${m.color};display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;flex-shrink:0">${initials(m.name)}</div>
+          <div><div style="font-size:14px;font-weight:700">${m.name}</div><div style="font-size:12px;color:var(--text2)">${m.role}</div><div style="font-size:11px;color:var(--text3)">${m.dept}</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+          <div style="text-align:center;background:var(--surface2);border-radius:var(--r-sm);padding:8px"><div style="font-size:18px;font-weight:700;font-family:var(--mono)">${cnt}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Total</div></div>
+          <div style="text-align:center;background:var(--surface2);border-radius:var(--r-sm);padding:8px"><div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--success)">${done}</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Done</div></div>
+          <div style="text-align:center;background:var(--surface2);border-radius:var(--r-sm);padding:8px"><div style="font-size:18px;font-weight:700;font-family:var(--mono);color:var(--accent)">${pct}%</div><div style="font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px">Rate</div></div>
+        </div>
+        <div style="height:4px;background:var(--surface3);border-radius:2px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${m.color};border-radius:2px;transition:width .8s ease"></div></div>
+        <div style="display:flex;gap:8px;margin-top:12px">
+          <button class="btn btn-ghost btn-sm" style="flex:1" onclick="showToast('✏️','Edit ${m.name.split(' ')[0]}')">Edit</button>
+          <button class="btn btn-danger btn-sm" style="flex:1" onclick="if(confirm('Remove ${m.name}?')){teamMembers.splice(${i},1);renderTeams();showToast('🗑️','Member removed');}">Remove</button>
+        </div>
+      </div>`;
+    }).join('')}
+    </div>`;
+}
+
+// ══ PROFILE ══════════════════════════════════════
+function renderProfile(){
+  document.getElementById('profTotal').textContent=changes.length;
+  document.getElementById('profDone').textContent=changes.filter(c=>c.status==='done').length;
+  document.getElementById('lastLogin').textContent=new Date().toISOString().slice(0,10);
+}
+
+// ══ DETAIL MODAL ═════════════════════════════════
+function showDetail(id){
+  const c=changes.find(x=>x.id===id);if(!c)return;
+  document.getElementById('detailId').textContent=`${c.id} · ${c.type} · ${c.impact}`;
+  document.getElementById('detailTitle').textContent=c.title;
+  document.getElementById('detailBody').innerHTML=`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">${statusBadge(c.status)} ${priorityBadge(c.priority)}<span style="font-size:12px;color:var(--text2);padding:3px 10px;background:var(--surface2);border-radius:20px">${c.type}</span></div>
+    <div style="margin-bottom:14px"><div class="detail-label">Description</div><div class="detail-value">${c.desc}</div></div>
+    <div class="divider"></div>
+    <div class="detail-grid">
+      <div><div class="detail-label">Owner</div><div class="detail-value" style="display:flex;align-items:center;gap:7px"><div class="avatar" style="background:${aColor(c.owner)}20;color:${aColor(c.owner)}">${initials(c.owner)}</div>${c.owner}</div></div>
+      <div><div class="detail-label">Impact Area</div><div class="detail-value">${c.impact||'—'}</div></div>
+      <div><div class="detail-label">Created</div><div class="detail-value" style="font-family:var(--mono);font-size:13px">${c.created}</div></div>
+      <div><div class="detail-label">Last Updated</div><div class="detail-value" style="font-family:var(--mono);font-size:13px">${c.updated}</div></div>
+    </div>
+    <div class="divider"></div>
+    <div class="detail-label" style="margin-bottom:12px">Activity Log</div>
+    <div class="tl-wrap">${(c.log||[]).map((l,i,arr)=>`<div class="tl-item"><div class="tl-dot ${i===arr.length-1?'active':''}"></div><div class="tl-text">${l.text}</div><div class="tl-time">${l.time}</div></div>`).join('')}</div>`;
+  document.getElementById('detailEditBtn').onclick=()=>{closeDetailModal();editChange(id);};
+  document.getElementById('detailDeleteBtn').onclick=()=>deleteChange(id);
+  document.getElementById('detailOverlay').classList.add('visible');
+}
+function closeDetailModal(e){if(e&&e.target!==document.getElementById('detailOverlay'))return;document.getElementById('detailOverlay').classList.remove('visible');}
+
+// ══ ADD/EDIT ══════════════════════════════════════
+function openAddModal(){
+  if(!editingId){document.getElementById('addModalTitle').textContent='New Change Request';['fTitle','fDesc','fImpact'].forEach(id=>document.getElementById(id).value='');document.getElementById('fPriority').value='medium';document.getElementById('fStatus').value='open';document.getElementById('fType').value='Business';document.getElementById('fOwner').value='Aishwarya Rajeshirke';}
+  document.getElementById('addOverlay').classList.add('visible');
+}
+function closeAddModal(e){if(e&&e.target!==document.getElementById('addOverlay'))return;document.getElementById('addOverlay').classList.remove('visible');editingId=null;}
+function editChange(id){
+  const c=changes.find(x=>x.id===id);if(!c)return;
+  editingId=id;document.getElementById('addModalTitle').textContent='Edit Change Request';
+  document.getElementById('fTitle').value=c.title;document.getElementById('fDesc').value=c.desc;
+  document.getElementById('fPriority').value=c.priority;document.getElementById('fStatus').value=c.status;
+  document.getElementById('fType').value=c.type;document.getElementById('fOwner').value=c.owner;
+  document.getElementById('fImpact').value=c.impact||'';
+  openAddModal();
+}
+function saveChange(){
+  const title=document.getElementById('fTitle').value.trim();if(!title){document.getElementById('fTitle').focus();return;}
+  const today=new Date().toISOString().slice(0,10);
+  const data={title,desc:document.getElementById('fDesc').value.trim(),priority:document.getElementById('fPriority').value,status:document.getElementById('fStatus').value,type:document.getElementById('fType').value,owner:document.getElementById('fOwner').value.trim()||'Aishwarya Rajeshirke',impact:document.getElementById('fImpact').value.trim(),updated:today};
+  if(editingId){
+    const idx=changes.findIndex(c=>c.id===editingId);
+    if(idx!==-1){changes[idx]={...changes[idx],...data};changes[idx].log=[...(changes[idx].log||[]),{text:`Change updated: ${data.status}`,time:today}];}
+    showToast('✅','Change updated');
+  } else {
+    changes.unshift({id:nextId(),created:today,log:[{text:'Change request created',time:today},{text:`Priority: ${data.priority}, Owner: ${data.owner}`,time:today}],...data});
+    showToast('🎉','New change added!');
+  }
+  save();editingId=null;document.getElementById('addOverlay').classList.remove('visible');
+  renderDashboard();if(curPage==='changes')renderChanges();
+}
+function deleteChange(id){
+  if(!confirm('Delete this change request?'))return;
+  changes=changes.filter(c=>c.id!==id);save();
+  document.getElementById('detailOverlay').classList.remove('visible');
+  renderDashboard();if(curPage==='changes')renderChanges();showToast('🗑️','Change deleted');
+}
+
+// ══ MODALS ════════════════════════════════════════
+function openEditProfileModal(){document.getElementById('editProfileOverlay').classList.add('visible');}
+function closeEPModal(e){if(e&&e.target!==document.getElementById('editProfileOverlay'))return;document.getElementById('editProfileOverlay').classList.remove('visible');}
+function openChangePwdModal(){document.getElementById('changePwdOverlay').classList.add('visible');}
+function closePwdModal(e){if(e&&e.target!==document.getElementById('changePwdOverlay'))return;document.getElementById('changePwdOverlay').classList.remove('visible');}
+function savePwd(){
+  const p=document.getElementById('pwdNew').value,c=document.getElementById('pwdConfirm').value;
+  if(!p||p.length<8){showToast('⚠️','Min 8 characters required');return;}
+  if(p!==c){showToast('⚠️','Passwords do not match');return;}
+  closePwdModal();showToast('🔒','Password updated successfully');
+}
+function openInviteModal(){document.getElementById('invName').value='';document.getElementById('invEmail').value='';document.getElementById('inviteOverlay').classList.add('visible');}
+function closeInviteModal(e){if(e&&e.target!==document.getElementById('inviteOverlay'))return;document.getElementById('inviteOverlay').classList.remove('visible');}
+function sendInvite(){
+  const name=document.getElementById('invName').value.trim(),email=document.getElementById('invEmail').value.trim();
+  if(!name||!email){showToast('⚠️','Name and email required');return;}
+  teamMembers.push({name,role:document.getElementById('invRole').value,dept:document.getElementById('invDept').value||'IT Division',color:aColor(name)});
+  closeInviteModal();renderTeams();showToast('📧',`Invitation sent to ${email}`);
+}
+function toggleSetting(el){el.classList.toggle('on');el.classList.toggle('off');showToast('⚙️','Setting updated');}
+function confirmSignOut(){if(confirm('Sign out?'))showToast('👋','Signed out. See you soon!');}
+function generateReport(name){showToast('📋',`${name} report generated!`);}
+
+// ══ EXPORT ════════════════════════════════════════
+function exportData(){
+  const h='ID,Title,Priority,Status,Type,Owner,Impact,Created,Updated\n';
+  const r=changes.map(c=>`${c.id},"${c.title.replace(/"/g,'""')}",${c.priority},${c.status},${c.type},"${c.owner}","${c.impact||''}",${c.created},${c.updated}`).join('\n');
+  const a=Object.assign(document.createElement('a'),{href:URL.createObjectURL(new Blob([h+r],{type:'text/csv'})),download:'BA_Changes_Aishwarya_Rajeshirke.csv'});
+  a.click();showToast('📤','CSV downloaded (100 records)');
+}
+
+// ══ TOAST ════════════════════════════════════════
+function showToast(icon,msg){
+  const t=document.getElementById('toast');
+  document.getElementById('toastIcon').textContent=icon;
+  document.getElementById('toastMsg').textContent=msg;
+  t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);
+}
+
+// ══ BOOT ═════════════════════════════════════════
+document.getElementById('dashDate');
+renderDashboard();
+renderChanges();
+</script>
+</body>
+</html>
