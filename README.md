@@ -115,8 +115,9 @@ Sample dataset of change requests (CSV file included)
 ---
 
 ## Screenshots
-(Add screenshots here after uploading images)
-
+Dashboard.png
+Change Requests.png
+Analytics.png
 ---
 
 ## Project Structure
