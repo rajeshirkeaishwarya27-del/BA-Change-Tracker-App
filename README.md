@@ -118,6 +118,7 @@ Sample dataset of change requests (CSV file included)
 Dashboard.png
 Change Requests.png
 Analytics.png
+> This project demonstrates end-to-end Business Analysis including requirement tracking, workflow management, and analytics.
 ---
 
 ## Project Structure
