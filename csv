@@ -1,0 +1,9 @@
+ID	Title	Priority	Status	Type	Owner	Impact	Created	Updated
+CR-001	Revamp login & 2FA flow	critical	progress	Technical	Priya Mehta	Auth Service, Mobile App	3/10/2025	3/10/2025
+CR-002	GDPR compliance audit trail	high	open	Regulatory	Aishwarya Rajeshirke	Data Platform	3/14/2025	3/14/2025
+CR-003	Customer dashboard redesign	medium	review	UI/UX	Sara Lim	Customer Portal	3/15/2025	3/15/2025
+CR-004	API rate limiting rules	high	open	Technical	Dev Patel	API Gateway	3/17/2025	3/17/2025
+CR-005	Billing cycle migration	medium	done	Business	Aishwarya Rajeshirke	Billing Module	3/5/2025	3/5/2025
+CR-006	Supplier onboarding automation	low	done	Process	Neha Roy	Procurement	2/20/2025	2/20/2025
+CR-007	Real-time inventory sync	critical	progress	Technical	Dev Patel	Inventory, Shop	3/18/2025	3/18/2025
+CR-008	WCAG 2.1 accessibility pass	medium	open	Regulatory	Sara Lim	All Web Apps	3/19/2025	3/19/2025
