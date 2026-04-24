@@ -1,9 +1,102 @@
 ID	Title	Priority	Status	Type	Owner	Impact	Created	Updated
-CR-001	Revamp login & 2FA flow	critical	progress	Technical	Priya Mehta	Auth Service, Mobile App	3/10/2025	3/10/2025
-CR-002	GDPR compliance audit trail	high	open	Regulatory	Aishwarya Rajeshirke	Data Platform	3/14/2025	3/14/2025
-CR-003	Customer dashboard redesign	medium	review	UI/UX	Sara Lim	Customer Portal	3/15/2025	3/15/2025
-CR-004	API rate limiting rules	high	open	Technical	Dev Patel	API Gateway	3/17/2025	3/17/2025
-CR-005	Billing cycle migration	medium	done	Business	Aishwarya Rajeshirke	Billing Module	3/5/2025	3/5/2025
-CR-006	Supplier onboarding automation	low	done	Process	Neha Roy	Procurement	2/20/2025	2/20/2025
-CR-007	Real-time inventory sync	critical	progress	Technical	Dev Patel	Inventory, Shop	3/18/2025	3/18/2025
-CR-008	WCAG 2.1 accessibility pass	medium	open	Regulatory	Sara Lim	All Web Apps	3/19/2025	3/19/2025
+CR-001	Migrate legacy CRM to Salesforce	critical	progress	Business	Aishwarya Rajeshirke	CRM, Sales Team	1/8/2025	1/8/2025
+CR-002	GDPR Article 30 compliance documentation	critical	open	Regulatory	Aishwarya Rajeshirke	Data Platform, Legal	1/10/2025	1/10/2025
+CR-003	Implement MFA for all admin accounts	critical	done	Security	Dev Patel	Auth Service, IAM	1/5/2025	1/5/2025
+CR-004	Real-time inventory sync with e-commerce	critical	progress	Technical	Dev Patel	Inventory, e-Commerce	1/12/2025	1/12/2025
+CR-005	Payment gateway PCI-DSS re-certification	critical	review	Regulatory	Priya Mehta	Payment Gateway, Finance	1/15/2025	1/15/2025
+CR-006	Customer portal SSO integration	high	done	Technical	Dev Patel	Customer Portal, Auth	1/7/2025	1/7/2025
+CR-007	Revamp employee onboarding workflow	high	progress	Process	Aishwarya Rajeshirke	HR System, ServiceNow	1/20/2025	1/20/2025
+CR-008	API rate limiting and throttling rules	high	done	Technical	Dev Patel	API Gateway	1/9/2025	1/9/2025
+CR-009	Annual data retention policy review	high	open	Regulatory	Aishwarya Rajeshirke	Data Platform, Compliance	1/22/2025	1/22/2025
+CR-010	Finance module budget vs actuals dashboard	high	done	Business	Rohit Sharma	Finance Module, BI	1/6/2025	1/6/2025
+CR-011	Upgrade PostgreSQL 12 to 15 across all environments	high	progress	Infrastructure	Dev Patel	All Systems, DevOps	2/3/2025	2/3/2025
+CR-012	Supplier portal self-service onboarding	high	open	Business	Ananya Iyer	Procurement, Supplier Portal	2/5/2025	2/5/2025
+CR-013	Decommission legacy FTP file transfer system	high	done	Infrastructure	Dev Patel	Integration Layer, DevOps	1/28/2025	1/28/2025
+CR-014	WCAG 2.1 AA accessibility remediation	high	progress	UI/UX	Sara Lim	Customer Portal, Mobile App	2/10/2025	2/10/2025
+CR-015	Automated regression test suite â€” Finance	high	review	Technical	Neha Roy	Finance Module, CI/CD	2/1/2025	2/1/2025
+CR-016	HRMS leave management module upgrade	high	done	Regulatory	Aishwarya Rajeshirke	HR System, Payroll	1/18/2025	1/18/2025
+CR-017	Service desk ticket auto-routing	medium	progress	Technical	Karan Joshi	Service Desk, AI/ML	2/12/2025	2/12/2025
+CR-018	Customer feedback NPS automation	medium	open	Business	Sara Lim	CRM, Customer Portal	2/14/2025	2/14/2025
+CR-019	Consolidated procurement spend report	medium	done	Data	Rohit Sharma	Finance, Procurement	1/25/2025	1/25/2025
+CR-020	Mobile app iOS 17 compatibility update	medium	done	Technical	Dev Patel	Mobile App	1/30/2025	1/30/2025
+CR-021	Implement DMARC and SPF email security	medium	done	Security	Karan Joshi	Email Infrastructure	1/16/2025	1/16/2025
+CR-022	ERP purchase order approval workflow redesign	medium	progress	Process	Aishwarya Rajeshirke	ERP, Finance	2/18/2025	2/18/2025
+CR-023	Data quality dashboard for master data	medium	review	Data	Ananya Iyer	Data Platform, MDM	2/8/2025	2/8/2025
+CR-024	Kubernetes cluster cost optimisation	medium	open	Infrastructure	Dev Patel	Cloud, DevOps	2/20/2025	2/20/2025
+CR-025	Automated payslip distribution	medium	done	Process	Rohit Sharma	HR System, Payroll	1/22/2025	1/22/2025
+CR-026	Product catalogue taxonomy redesign	medium	open	Business	Ananya Iyer	e-Commerce, CRM	2/22/2025	2/22/2025
+CR-027	Disaster recovery runbook update	medium	progress	Infrastructure	Vikram Singh	All Systems, DR	2/15/2025	2/15/2025
+CR-028	User access recertification automation	medium	done	Security	Karan Joshi	IAM, Compliance	1/20/2025	1/20/2025
+CR-029	Warehouse mobile scanner app upgrade	medium	done	Technical	Dev Patel	Inventory, WMS	1/28/2025	1/28/2025
+CR-030	Business continuity plan 2025 refresh	medium	open	Process	Priya Mehta	All Departments	2/25/2025	2/25/2025
+CR-031	SLA breach alerting in ServiceNow	medium	done	Technical	Karan Joshi	Service Desk	1/31/2025	1/31/2025
+CR-032	Customer segmentation model â€” ML	medium	review	Data	Ananya Iyer	Data Platform, CRM	2/16/2025	2/16/2025
+CR-033	Office 365 tenant consolidation	high	done	Infrastructure	Vikram Singh	IT Infrastructure, Comms	1/14/2025	1/14/2025
+CR-034	Vendor contract management system	medium	progress	Business	Priya Mehta	Legal, Procurement	2/28/2025	2/28/2025
+CR-035	Android app biometric authentication	medium	done	Technical	Dev Patel	Mobile App, Security	2/2/2025	2/2/2025
+CR-036	Sales commission calculation automation	high	open	Business	Rohit Sharma	Finance, CRM	3/2/2025	3/2/2025
+CR-037	Network segmentation for PCI environment	high	progress	Security	Vikram Singh	Network, Payment GW	3/4/2025	3/4/2025
+CR-038	Customer loyalty programme â€” Phase 2	medium	open	Business	Sara Lim	Customer Portal, CRM	3/6/2025	3/6/2025
+CR-039	ServiceNow CMDB data clean-up	medium	progress	Data	Karan Joshi	CMDB, Service Desk	3/8/2025	3/8/2025
+CR-040	RPA bot for accounts payable matching	high	review	Process	Aishwarya Rajeshirke	Finance, ERP	3/1/2025	3/1/2025
+CR-041	Cloud storage lifecycle policy	low	done	Infrastructure	Dev Patel	Cloud, Storage	2/10/2025	2/10/2025
+CR-042	Ethics hotline portal â€” anonymous reporting	medium	done	Regulatory	Priya Mehta	Compliance, Legal	1/26/2025	1/26/2025
+CR-043	Customer churn prediction model	medium	progress	Data	Ananya Iyer	Data Platform, CRM	3/10/2025	3/10/2025
+CR-044	Barcode label print standardisation	low	done	Process	Neha Roy	Inventory, WMS	2/6/2025	2/6/2025
+CR-045	Help desk knowledge base migration	low	done	Process	Karan Joshi	Service Desk	2/4/2025	2/4/2025
+CR-046	Pension payroll integration â€” new provider	high	review	Business	Rohit Sharma	Payroll, HR System	3/5/2025	3/5/2025
+CR-047	Zero trust network access rollout	high	progress	Security	Vikram Singh	Network, IAM	3/12/2025	3/12/2025
+CR-048	ERP month-end close process optimisation	high	open	Process	Aishwarya Rajeshirke	Finance, ERP	3/15/2025	3/15/2025
+CR-049	Marketing automation platform migration	medium	progress	Business	Sara Lim	CRM, Marketing	3/14/2025	3/14/2025
+CR-050	Warehouse dock scheduling system	medium	open	Business	Ananya Iyer	Inventory, WMS	3/18/2025	3/18/2025
+CR-051	API deprecation â€” v1 sunset plan	high	open	Technical	Dev Patel	API Gateway, Partners	3/20/2025	3/20/2025
+CR-052	ISO 27001 gap assessment and remediation	high	progress	Regulatory	Vikram Singh	All IT Systems	3/10/2025	3/10/2025
+CR-053	HR analytics dashboard â€” attrition metrics	medium	done	Data	Rohit Sharma	HR System, BI	2/20/2025	2/20/2025
+CR-054	On-call schedule automation	low	done	Process	Karan Joshi	Service Desk, DevOps	2/15/2025	2/15/2025
+CR-055	Customer address validation at checkout	medium	done	Technical	Dev Patel	e-Commerce, CRM	2/22/2025	2/22/2025
+CR-056	Product returns portal â€” self-service	high	review	UI/UX	Sara Lim	Customer Portal, e-Commerce	3/8/2025	3/8/2025
+CR-057	Legacy COBOL batch job modernisation â€” Phase 1	critical	progress	Technical	Dev Patel	Finance, Legacy Systems	3/5/2025	3/5/2025
+CR-058	Single view of customer â€” data lake	high	progress	Data	Ananya Iyer	Data Platform, All	3/22/2025	3/22/2025
+CR-059	VAT submission automation â€” Making Tax Digital	high	review	Regulatory	Aishwarya Rajeshirke	Finance, Compliance	3/12/2025	3/12/2025
+CR-060	ServiceNow upgrade â€” San Diego to Vancouver	critical	progress	Infrastructure	Vikram Singh	Service Desk, CMDB	3/18/2025	3/18/2025
+CR-061	Chatbot for customer support tier-1	high	open	Technical	Karan Joshi	Customer Portal, Service Desk	3/25/2025	3/25/2025
+CR-062	Contract renewal alert workflow	medium	done	Process	Priya Mehta	Legal, Procurement	2/28/2025	2/28/2025
+CR-063	Document management â€” SharePoint migration	medium	progress	Infrastructure	Vikram Singh	All Departments	4/1/2025	4/1/2025
+CR-064	Advanced threat protection â€” endpoint	critical	progress	Security	Vikram Singh	All Endpoints, SOC	3/28/2025	3/28/2025
+CR-065	Procurement approval mobile app	medium	review	UI/UX	Sara Lim	Procurement, Finance	3/20/2025	3/20/2025
+CR-066	Data anonymisation for test environments	high	done	Security	Aishwarya Rajeshirke	All Dev/Test DBs	3/2/2025	3/2/2025
+CR-067	Energy consumption monitoring dashboard	low	open	Infrastructure	Rohit Sharma	Facilities, IoT	4/5/2025	4/5/2025
+CR-068	Automated backup validation testing	medium	done	Infrastructure	Dev Patel	All Systems, DR	3/15/2025	3/15/2025
+CR-069	Sales order fulfilment SLA tracking	medium	progress	Business	Ananya Iyer	e-Commerce, Inventory	4/2/2025	4/2/2025
+CR-070	Unified communications â€” Microsoft Teams rollout	high	done	Infrastructure	Vikram Singh	All Staff, Comms	2/8/2025	2/8/2025
+CR-071	Supplier performance scorecard	medium	open	Business	Priya Mehta	Procurement, ERP	4/7/2025	4/7/2025
+CR-072	ITAM software licence reconciliation	medium	done	Process	Karan Joshi	ITAM, Finance	3/10/2025	3/10/2025
+CR-073	Customer pricing engine upgrade	high	progress	Business	Rohit Sharma	e-Commerce, CRM	4/4/2025	4/4/2025
+CR-074	Remote desktop VDI rollout â€” finance team	high	review	Infrastructure	Vikram Singh	Finance, Remote Work	4/1/2025	4/1/2025
+CR-075	Leave management mobile self-service	low	done	UI/UX	Sara Lim	HR System, Mobile	3/20/2025	3/20/2025
+CR-076	Vulnerability management programme â€” Q2	high	open	Security	Vikram Singh	All Servers, SOC	4/8/2025	4/8/2025
+CR-077	Customer invoice portal â€” self-service	medium	open	Business	Aishwarya Rajeshirke	Billing, Customer Portal	4/10/2025	4/10/2025
+CR-078	Data pipeline for regulatory reporting	high	progress	Data	Ananya Iyer	Finance, Compliance	4/6/2025	4/6/2025
+CR-079	Social media complaint monitoring	low	open	Business	Sara Lim	CRM, Customer Service	4/12/2025	4/12/2025
+CR-080	Third-party API security assessment	high	review	Security	Karan Joshi	API Gateway, Security	4/5/2025	4/5/2025
+CR-081	Automated SLA reporting to customers	medium	open	Process	Priya Mehta	Service Desk, CRM	4/14/2025	4/14/2025
+CR-082	Cloud cost governance policy	medium	done	Infrastructure	Dev Patel	Cloud, Finance	3/28/2025	3/28/2025
+CR-083	Customer returns fraud detection	medium	progress	Data	Ananya Iyer	e-Commerce, Finance	4/8/2025	4/8/2025
+CR-084	Internal audit trail dashboard	high	open	Security	Aishwarya Rajeshirke	All Systems, Compliance	4/15/2025	4/15/2025
+CR-085	Power BI premium licence rollout	medium	done	Infrastructure	Rohit Sharma	BI, All Departments	3/22/2025	3/22/2025
+CR-086	Multi-currency billing support	high	open	Business	Rohit Sharma	Billing, Finance	4/16/2025	4/16/2025
+CR-087	Pension auto-enrolment compliance audit	high	done	Regulatory	Aishwarya Rajeshirke	Payroll, HR System	3/8/2025	3/8/2025
+CR-088	IT asset disposal (ITAD) process formalisation	low	done	Process	Karan Joshi	ITAM, Facilities	3/12/2025	3/12/2025
+CR-089	Expense claim OCR automation	medium	progress	Process	Priya Mehta	Finance, HR System	4/10/2025	4/10/2025
+CR-090	Event-driven architecture â€” Phase 1	critical	open	Technical	Dev Patel	Integration, All Systems	4/12/2025	4/12/2025
+CR-091	Intranet portal redesign	medium	review	UI/UX	Sara Lim	Intranet, Comms	4/8/2025	4/8/2025
+CR-092	Helpdesk first-call resolution tracking	low	open	Process	Neha Roy	Service Desk	4/18/2025	4/18/2025
+CR-093	Customer data enrichment â€” third party	medium	done	Data	Ananya Iyer	CRM, Data Platform	4/2/2025	4/2/2025
+CR-094	Fraud monitoring â€” real-time transaction alerts	critical	open	Security	Vikram Singh	Payment GW, Finance	4/14/2025	4/14/2025
+CR-095	Compliance training LMS implementation	medium	progress	Regulatory	Neha Roy	HR System, Compliance	4/16/2025	4/16/2025
+CR-096	Order management â€” partial shipment support	medium	open	Business	Ananya Iyer	e-Commerce, Inventory	4/20/2025	4/20/2025
+CR-097	SaaS sprawl audit and rationalisation	high	progress	Process	Aishwarya Rajeshirke	ITAM, Finance	4/18/2025	4/18/2025
+CR-098	API gateway migration â€” Kong to AWS API GW	high	open	Technical	Dev Patel	API Gateway, Cloud	4/22/2025	4/22/2025
+CR-099	Vendor invoice OCR and e-invoicing	medium	review	Process	Rohit Sharma	Finance, Procurement	4/10/2025	4/10/2025
+CR-100	ESG reporting data pipeline	medium	open	Data	Rohit Sharma	Facilities, Finance, ESG	4/24/2025	4/24/2025
+
